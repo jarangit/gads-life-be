@@ -1,0 +1,39 @@
+# filepath: /Users/jarandonchaaim/Documents/dev/personal/my-project/gads-life-be/docker-compose.yml
+version: '3.8'
+
+services:
+  mysql-db:
+    image: mysql:8.0
+    container_name: gadslife_mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: root_password_2026
+      MYSQL_DATABASE: gadslife_db
+      MYSQL_USER: gadslife_user
+      MYSQL_PASSWORD: gadslife_secret_2026
+    ports:
+      - '3306:3306'
+    volumes:
+      - gadslife_mysql_data:/var/lib/mysql
+
+  gadslife-api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: gadslife_api
+    restart: unless-stopped
+    ports:
+      - '3001:3001'
+    environment:
+      - DB_HOST=mysql-db
+      - DB_PORT=3306
+      - DB_USERNAME=gadslife_user
+      - DB_PASSWORD=gadslife_secret_2026
+      - DB_NAME=gadslife_db
+      - PORT=3001
+      - ADMIN_API_KEY=gads_admin_key_2026_secure
+    depends_on:
+      - mysql-db
+
+volumes:
+  gadslife_mysql_data:
