@@ -10,7 +10,7 @@ import {
 import { CategoryService } from './category.service';
 import { CreateCategoryDto } from './dto/create-category.dto';
 import { UpdateCategoryDto } from './dto/update-category.dto';
-import { AdminOnly } from 'src/common/decorators/admin-only.decorator';
+import { AdminOnly } from '../../common/decorators/admin-only.decorator';
 
 @Controller('admin/category')
 @AdminOnly()
