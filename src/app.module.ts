@@ -9,7 +9,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
   imports: [
     ConfigModule.forRoot({ isGlobal: true, envFilePath: '.env' }),
     TypeOrmModule.forRootAsync({
-      useFactory: (config: ConfigService) => ({
+      useFactory: () => ({
         inject: [ConfigService],
         type: 'mysql',
         host: process.env.DB_HOST,
