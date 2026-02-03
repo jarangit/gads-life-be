@@ -24,18 +24,26 @@ export class CategoryService {
   }
 
   findAll() {
-    return `This action returns all category`;
+    // TODO: Implement findAll method
+    const data = this.categoryRepository.find();
+    return data;
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} category`;
+  findOne(slug: string) {
+    const data = this.categoryRepository.findOneBy({ slug });
+    return data;
   }
 
-  update(id: number, updateCategoryDto: UpdateCategoryDto) {
-    return `This action updates a #${id} category`;
+  async update(id: string, updateCategoryDto: UpdateCategoryDto) {
+    const find = await this.categoryRepository.findOneBy({ id });
+    if (!find) {
+      throw new ConflictException('Category not found');
+    }
+    await this.categoryRepository.update(id, updateCategoryDto);
+    return this.categoryRepository.findOneBy({ id });
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} category`;
+  remove(id: string) {
+    return this.categoryRepository.delete(id);
   }
 }
