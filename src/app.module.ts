@@ -4,6 +4,7 @@ import { AppService } from './app.service';
 import { CategoryModule } from './admin/category/category.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { CollectionModule } from './collection/collection.module';
 
 @Module({
   imports: [
@@ -22,6 +23,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
       }),
     }),
     CategoryModule,
+    CollectionModule,
   ],
   controllers: [AppController],
   providers: [AppService],
