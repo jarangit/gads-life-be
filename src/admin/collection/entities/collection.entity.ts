@@ -11,7 +11,7 @@ import {
   BeforeInsert,
   PrimaryColumn,
 } from 'typeorm';
-import { nanoid10 } from '../../../../src/utils/nanoid';
+import { nanoid10 } from '../../../utils/nanoid';
 
 /**
  * ประเภทของบทความ

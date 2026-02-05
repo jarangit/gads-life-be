@@ -1,4 +1,5 @@
 import {
+  Entity,
   BeforeInsert,
   Column,
   CreateDateColumn,
@@ -8,8 +9,9 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 import { ProductRating } from './product-rating.entiry';
-import { nanoid10 } from '../../../../src/utils/nanoid';
+import { nanoid10 } from '../../../utils/nanoid';
 
+@Entity('products')
 export class Product {
   @PrimaryColumn({ type: 'varchar', length: 10 })
   id: string;
