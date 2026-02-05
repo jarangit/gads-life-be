@@ -110,7 +110,7 @@ describe('CollectionController', () => {
       const result = await controller.findOne('1');
 
       expect(result).toEqual(mockCollection);
-      expect(service.findOne).toHaveBeenCalledWith(1);
+      expect(service.findOne).toHaveBeenCalledWith('1');
     });
   });
 
@@ -119,14 +119,18 @@ describe('CollectionController', () => {
   // ==========================================
   describe('update', () => {
     it('should update a collection', async () => {
-      const updateDto: UpdateCollectionDto = { titleTh: 'Updated Title' };
+      const updateDto: UpdateCollectionDto = {
+        type: CollectionType.TOP_LIST,
+        slug: 'top-5-laptop-for-work',
+        titleTh: 'Updated Title',
+      };
       const updatedCollection = { ...mockCollection, ...updateDto };
       mockCollectionService.update.mockResolvedValueOnce(updatedCollection);
 
       const result = await controller.update('1', updateDto);
 
-      expect(result.titleTh).toBe('Updated Title');
-      expect(service.update).toHaveBeenCalledWith(1, updateDto);
+      expect(result?.titleTh).toBe('Updated Title');
+      expect(service.update).toHaveBeenCalledWith('1', updateDto);
     });
   });
 
@@ -140,7 +144,7 @@ describe('CollectionController', () => {
       const result = await controller.remove('1');
 
       expect(result).toEqual(mockCollection);
-      expect(service.remove).toHaveBeenCalledWith(1);
+      expect(service.remove).toHaveBeenCalledWith('1');
     });
   });
 });

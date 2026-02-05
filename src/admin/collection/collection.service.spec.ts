@@ -39,8 +39,8 @@ describe('CollectionService', () => {
     titleEn: undefined,
     excerpt: 'รวมรุ่นน่าซื้อสำหรับสายทำงาน',
     coverImage: undefined,
-    categoryId: 1,
-    subcategoryId: 10,
+    categoryId: "1",
+    subcategoryId: "10",
   };
 
   it('should be created', async () => {
@@ -58,7 +58,7 @@ describe('CollectionService', () => {
     mockCollectionRepository.create.mockReturnValue(createEntity);
 
     // save entity have id
-    const savedEntity = { ...createEntity, id: 1 } as Collection;
+    const savedEntity = { ...createEntity, id: "1" } as Collection;
     mockCollectionRepository.save.mockResolvedValueOnce(savedEntity);
 
     const result = await service.create({
@@ -69,6 +69,6 @@ describe('CollectionService', () => {
       where: { slug: dto.slug },
     });
 
-    expect(result.id).toBe(1);
+    expect(result.id).toBe("1");
   });
 });

@@ -1,4 +1,3 @@
-import { nanoid } from 'nanoid';
 import { Category } from '../../category/entities/category.entity';
 import {
   Entity,
@@ -12,7 +11,7 @@ import {
   BeforeInsert,
   PrimaryColumn,
 } from 'typeorm';
-import { nanoid10 } from 'src/utils/nanoid';
+import { nanoid10 } from '../../../../src/utils/nanoid';
 
 /**
  * ประเภทของบทความ

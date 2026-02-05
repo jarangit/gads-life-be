@@ -28,7 +28,6 @@ export class UpdateCollectionDto extends PartialType(CreateCollectionDto) {
    * ชื่อบทความภาษาไทย (จำเป็น)
    */
   @IsString()
-  @IsNotEmpty()
   titleTh: string;
 
   /**
