@@ -1,4 +1,4 @@
-import { Category } from 'src/admin/category/entities/category.entity';
+import { Category } from '../../category/entities/category.entity';
 import {
   Entity,
   PrimaryGeneratedColumn,
@@ -16,7 +16,7 @@ import {
  * - GUIDE: บทความสอน / แนะนำการเลือกซื้อ
  * - COMPARISON: บทความเปรียบเทียบสินค้า
  */
-export enum ArticleType {
+export enum CollectionType {
   TOP_LIST = 'TOP_LIST',
   GUIDE = 'GUIDE',
   COMPARISON = 'COMPARISON',
@@ -28,24 +28,24 @@ export enum ArticleType {
  * - PUBLISHED: เผยแพร่แล้ว (user เห็น)
  * - ARCHIVED: เก็บไว้ ไม่แสดงหน้าเว็บ แต่ยังไม่ลบข้อมูล
  */
-export enum ArticleStatus {
+export enum CollectionStatus {
   DRAFT = 'DRAFT',
   PUBLISHED = 'PUBLISHED',
   ARCHIVED = 'ARCHIVED',
 }
 
 /**
- * Entity: articles
+ * Entity: Collections
  * แทนตารางบทความทั้งหมดในระบบ
  */
-@Entity({ name: 'articles' })
+@Entity({ name: 'collections' })
 /**
  * index สำหรับ query:
  * - list บทความตาม category
  * - filter เฉพาะ status = PUBLISHED
  * - sort / filter ด้วย published_at
  */
-@Index('idx_articles_category_status_published', [
+@Index('idx_collections_category_status_published', [
   'categoryId',
   'status',
   'publishedAt',
@@ -54,7 +54,10 @@ export enum ArticleStatus {
  * index สำหรับกรณีบทความอยู่ใน subcategory
  * ใช้กับหน้า list เช่น /laptop/gaming
  */
-@Index('idx_articles_subcategory_status_published', ['status', 'publishedAt'])
+@Index('idx_collections_subcategory_status_published', [
+  'status',
+  'publishedAt',
+])
 export class Collection {
   /**
    * Primary Key
@@ -67,15 +70,15 @@ export class Collection {
    * ประเภทบทความ
    * ใช้กำหนด behavior หน้าเว็บ เช่น layout / component ที่ใช้ render
    */
-  @Column({ type: 'enum', enum: ArticleType })
-  type: ArticleType;
+  @Column({ type: 'enum', enum: CollectionType })
+  type: CollectionType;
 
   /**
    * slug สำหรับ SEO และ routing
    * ต้อง unique เช่น:
-   * /articles/top-5-laptop-for-work
+   * /Collections/top-5-laptop-for-work
    */
-  @Index('uq_articles_slug', { unique: true })
+  @Index('uq_collections_slug', { unique: true })
   @Column({ type: 'varchar', length: 255 })
   slug: string;
 
@@ -112,12 +115,12 @@ export class Collection {
    * nullable เพราะบางบทความอาจไม่อยู่ใน category
    */
   @Column({
-    type: 'int',
-    unsigned: true,
+    type: 'varchar',
+    length: 36,
     nullable: true,
     name: 'category_id',
   })
-  categoryId?: number | null;
+  categoryId?: string | null;
 
   /**
    * relation ไปที่ Category
@@ -138,10 +141,11 @@ export class Collection {
    */
   @Column({
     type: 'enum',
-    enum: ArticleStatus,
-    default: ArticleStatus.DRAFT,
+    enum: CollectionStatus,
+    default: CollectionStatus.DRAFT,
+    nullable: true,
   })
-  status: ArticleStatus;
+  status: CollectionStatus;
 
   /**
    * วันที่เผยแพร่จริง
