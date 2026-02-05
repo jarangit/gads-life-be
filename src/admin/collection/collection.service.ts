@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { ConflictException, Injectable } from '@nestjs/common';
 import { CreateCollectionDto } from './dto/create-collection.dto';
 import { UpdateCollectionDto } from './dto/update-collection.dto';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -12,22 +12,33 @@ export class CollectionService {
     private readonly collectionRepository: Repository<Collection>,
   ) {}
   async create(createCollectionDto: CreateCollectionDto) {
-    const { slug } = createCollectionDto;
+    const { slug, categoryId } = createCollectionDto;
+
+    const hasCategory = await this.collectionRepository.findOne({
+      where: { categoryId },
+    });
+    if (!hasCategory) {
+      throw new ConflictException('Category not found');
+    }
+
     const existing: any = await this.collectionRepository.findOne({
       where: { slug },
     });
     if (existing) {
-      throw new Error('Collection with this slug already exists');
+      throw new ConflictException('Collection with this slug already exists');
     }
+
     const collection = this.collectionRepository.create({
       ...createCollectionDto,
       status: CollectionStatus.DRAFT,
     });
-    return this.collectionRepository.save(collection);
+    return await this.collectionRepository.save(collection);
   }
 
   findAll() {
-    return `This action returns all collection`;
+    // element find all data
+    const data = this.collectionRepository.find();
+    return data;
   }
 
   findOne(id: number) {

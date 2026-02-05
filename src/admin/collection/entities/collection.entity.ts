@@ -1,3 +1,4 @@
+import { nanoid } from 'nanoid';
 import { Category } from '../../category/entities/category.entity';
 import {
   Entity,
@@ -8,7 +9,10 @@ import {
   JoinColumn,
   CreateDateColumn,
   UpdateDateColumn,
+  BeforeInsert,
+  PrimaryColumn,
 } from 'typeorm';
+import { nanoid10 } from 'src/utils/nanoid';
 
 /**
  * ประเภทของบทความ
@@ -63,8 +67,13 @@ export class Collection {
    * Primary Key
    * ใช้เป็น id หลักภายในระบบ
    */
-  @PrimaryGeneratedColumn()
-  id: number;
+  @PrimaryColumn({ type: 'varchar', length: 10 })
+  id: string;
+
+  @BeforeInsert()
+  generateId() {
+    this.id = nanoid10();
+  }
 
   /**
    * ประเภทบทความ

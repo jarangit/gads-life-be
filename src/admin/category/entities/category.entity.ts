@@ -1,3 +1,4 @@
+import { nanoid10 } from 'src/utils/nanoid';
 import {
   Entity,
   PrimaryGeneratedColumn,
@@ -5,6 +6,8 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
   Index,
+  PrimaryColumn,
+  BeforeInsert,
 } from 'typeorm';
 
 @Entity('categories') // ชื่อ table ใน database
@@ -13,9 +16,13 @@ export class Category {
   // ========================================
   // Primary Key - ใช้ UUID แทน auto-increment
   // ========================================
-  @PrimaryGeneratedColumn('uuid')
+  @PrimaryColumn({ type: 'varchar', length: 10 })
   id: string;
 
+  @BeforeInsert()
+  generateId() {
+    this.id = nanoid10();
+  }
   // ========================================
   // Unique Column - slug ต้องไม่ซ้ำกัน
   // ========================================

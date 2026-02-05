@@ -11,7 +11,7 @@ import { CollectionService } from './collection.service';
 import { CreateCollectionDto } from './dto/create-collection.dto';
 import { UpdateCollectionDto } from './dto/update-collection.dto';
 
-@Controller('collection')
+@Controller('/admin/collections')
 export class CollectionController {
   constructor(private readonly collectionService: CollectionService) {}
 
