@@ -1,9 +1,60 @@
 import { PartialType } from '@nestjs/mapped-types';
 import { CreateCollectionDto } from './create-collection.dto';
-import { IsString, MinLength } from 'class-validator';
+import {
+  IsEnum,
+  IsNotEmpty,
+  IsOptional,
+  IsString,
+  MinLength,
+} from 'class-validator';
+import { CollectionType } from '../entities/collection.entity';
 
 export class UpdateCollectionDto extends PartialType(CreateCollectionDto) {
+  /**
+   * ประเภทบทความ (จำเป็น)
+   * ใช้กำหนดรูปแบบการแสดงผล
+   */
+  @IsEnum(CollectionType)
+  type: CollectionType;
+
+  /**
+   * slug สำหรับ URL และ SEO
+   * ต้องไม่ซ้ำ
+   */
   @IsString()
-  @MinLength(2)
-  nameTh: string;
+  @IsNotEmpty()
+  slug: string;
+  /**
+   * ชื่อบทความภาษาไทย (จำเป็น)
+   */
+  @IsString()
+  @IsNotEmpty()
+  titleTh: string;
+
+  /**
+   * ชื่อบทความภาษาอังกฤษ (optional)
+   */
+  @IsOptional()
+  @IsString()
+  titleEn?: string;
+
+  /**
+   * ข้อความสั้นหน้า list
+   */
+  @IsOptional()
+  @IsString()
+  excerpt?: string;
+
+  /**
+   * รูปหน้าปก (URL)
+   */
+  @IsOptional()
+  @IsString()
+  coverImage?: string;
+
+  /**
+   * หมวดหลัก (optional)
+   */
+  @IsOptional()
+  categoryId?: string;
 }
