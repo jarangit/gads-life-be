@@ -2,6 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { CollectionService } from './collection.service';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { Collection, CollectionType } from './entities/collection.entity';
+import { Category } from '../category/entities/category.entity';
 
 describe('CollectionService', () => {
   let service: CollectionService;
@@ -10,10 +11,16 @@ describe('CollectionService', () => {
     create: jest.fn(),
     save: jest.fn(),
     findOne: jest.fn(),
+    findOneBy: jest.fn(),
     find: jest.fn(),
     update: jest.fn(),
     delete: jest.fn(),
   };
+
+  const mockCategoryRepository = {
+    findOne: jest.fn(),
+  };
+
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
@@ -21,6 +28,10 @@ describe('CollectionService', () => {
         {
           provide: getRepositoryToken(Collection),
           useValue: mockCollectionRepository,
+        },
+        {
+          provide: getRepositoryToken(Category),
+          useValue: mockCategoryRepository,
         },
       ],
     }).compile();
@@ -44,6 +55,8 @@ describe('CollectionService', () => {
   };
 
   it('should be created', async () => {
+    // category exists
+    mockCategoryRepository.findOne.mockResolvedValueOnce({ id: '1' });
     // slug ไม่ซ้ำ
     mockCollectionRepository.findOne.mockResolvedValueOnce(null);
     const createEntity = {
