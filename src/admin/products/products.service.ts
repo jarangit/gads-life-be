@@ -4,7 +4,7 @@ import { UpdateProductDto } from './dto/update-product.dto';
 import { DataSource, Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Product } from './entities/product.entity';
-import { ProductRating } from './entities/product-rating.entiry';
+import { ProductRating } from './entities/product-rating.entity';
 import { FindProductQueryDto } from './dto/validate.dto';
 
 @Injectable()

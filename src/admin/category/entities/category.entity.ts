@@ -1,8 +1,7 @@
-import { Product } from 'src/admin/products/entities/product.entity';
+import { Product } from '../../products/entities/product.entity';
 import { nanoid10 } from '../../../utils/nanoid';
 import {
   Entity,
-  PrimaryGeneratedColumn,
   Column,
   CreateDateColumn,
   UpdateDateColumn,

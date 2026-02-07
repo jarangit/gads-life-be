@@ -9,7 +9,7 @@ import {
   UpdateDateColumn,
   ManyToOne,
 } from 'typeorm';
-import { ProductRating } from './product-rating.entiry';
+import { ProductRating } from './product-rating.entity';
 import { nanoid10 } from '../../../utils/nanoid';
 import { Category } from './../../category/entities/category.entity';
 import { ProductStatus } from '../dto/validate.dto';

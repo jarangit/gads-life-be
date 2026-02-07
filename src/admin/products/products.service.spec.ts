@@ -2,7 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { ProductsService } from './products.service';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { Product } from './entities/product.entity';
-import { ProductRating } from './entities/product-rating.entiry';
+import { ProductRating } from './entities/product-rating.entity';
 import { DataSource } from 'typeorm';
 
 describe('ProductsService', () => {
