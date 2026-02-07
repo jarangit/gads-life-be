@@ -5,9 +5,13 @@ meta {
 }
 
 get {
-  url: {{local}}/admin/collections
+  url: {{local}}/admin/products?status=darft
   body: none
   auth: inherit
+}
+
+params:query {
+  status: darft
 }
 
 headers {
@@ -16,4 +20,5 @@ headers {
 
 settings {
   encodeUrl: true
+  timeout: 0
 }

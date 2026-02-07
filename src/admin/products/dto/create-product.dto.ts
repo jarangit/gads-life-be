@@ -3,6 +3,7 @@ import {
   IsArray,
   IsBoolean,
   IsDateString,
+  IsEnum,
   IsInt,
   IsNotEmpty,
   IsNumber,
@@ -12,6 +13,7 @@ import {
   Min,
   ValidateNested,
 } from 'class-validator';
+import { ProductStatus } from './validate.dto';
 export class CreateProductRatingDto {
   /** เช่น "ความคุ้มค่า" */
   @IsString()
@@ -26,6 +28,9 @@ export class CreateProductRatingDto {
 }
 
 export class CreateProductDto {
+  @IsString()
+  @IsOptional()
+  categoryId?: string | null;
   /** ชื่อสินค้า */
   @IsString()
   @IsNotEmpty()
@@ -82,4 +87,8 @@ export class CreateProductDto {
   @ValidateNested({ each: true })
   @Type(() => CreateProductRatingDto)
   ratings?: CreateProductRatingDto[];
+
+  @IsOptional()
+  @IsEnum(ProductStatus)
+  status?: ProductStatus;
 }

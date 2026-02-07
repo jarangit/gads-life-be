@@ -7,9 +7,12 @@ import {
   OneToMany,
   PrimaryColumn,
   UpdateDateColumn,
+  ManyToOne,
 } from 'typeorm';
 import { ProductRating } from './product-rating.entiry';
 import { nanoid10 } from '../../../utils/nanoid';
+import { Category } from './../../category/entities/category.entity';
+import { ProductStatus } from '../dto/validate.dto';
 
 @Entity('products')
 export class Product {
@@ -20,6 +23,15 @@ export class Product {
   generateId() {
     this.id = nanoid10();
   }
+
+  // categoryId: string; // FK ไป categories.id (ถ้ามีหลายหมวด อาจต้องทำเป็น many-to-many)
+  @Column({ type: 'varchar', length: 10, name: 'category_id', nullable: true })
+  categoryId: string | null;
+
+  // category relation
+  @ManyToOne(() => Category, (c) => c.products, { onDelete: 'SET NULL' })
+  @JoinColumn({ name: 'category_id' })
+  category: Category | null;
 
   /** ชื่อสินค้า */
   @Column({ type: 'varchar', length: 255 })
@@ -82,4 +94,11 @@ export class Product {
   // })
   // @JoinColumn({ name: 'quick_verdict_id' })
   // quickVerdict: ProductQuickVerdict;
+
+  @Column({
+    type: 'varchar',
+    length: 20,
+    default: ProductStatus.DRAFT,
+  })
+  status: ProductStatus;
 }

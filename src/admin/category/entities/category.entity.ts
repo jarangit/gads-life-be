@@ -1,3 +1,4 @@
+import { Product } from 'src/admin/products/entities/product.entity';
 import { nanoid10 } from '../../../utils/nanoid';
 import {
   Entity,
@@ -8,6 +9,7 @@ import {
   Index,
   PrimaryColumn,
   BeforeInsert,
+  OneToMany,
 } from 'typeorm';
 
 @Entity('categories') // ชื่อ table ใน database
@@ -103,4 +105,9 @@ export class Category {
     type: 'timestamp',
   })
   updatedAt: Date;
+
+  // relation
+  // products[]
+  @OneToMany(() => Product, (p) => p.category)
+  products: Product[];
 }

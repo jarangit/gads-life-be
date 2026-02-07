@@ -5,6 +5,7 @@ import { DataSource, Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Product } from './entities/product.entity';
 import { ProductRating } from './entities/product-rating.entiry';
+import { FindProductQueryDto } from './dto/validate.dto';
 
 @Injectable()
 export class ProductsService {
@@ -18,17 +19,19 @@ export class ProductsService {
     private readonly productRatingRepository: Repository<ProductRating>,
   ) {}
   async create(createProductDto: CreateProductDto): Promise<Product> {
-    const created = this.dataSource.transaction(async (manager) => {
+    return this.dataSource.transaction(async (manager) => {
       const productRepo = manager.getRepository(Product);
       const ratingRepo = manager.getRepository(ProductRating);
 
-      // create product first
-      const product = productRepo.create({
-        ...createProductDto,
-      });
-      // map ratings
-      if (createProductDto.ratings && createProductDto.ratings.length > 0) {
-        const ratings = createProductDto.ratings.map((r) =>
+      // แยก ratings ออกก่อน เพื่อไม่ให้ cascade save ซ้ำ
+      const { ratings: ratingsDto, ...productData } = createProductDto;
+
+      const product = productRepo.create(productData);
+      await productRepo.save(product);
+
+      // create ratings manually
+      if ((ratingsDto ?? []).length > 0) {
+        const ratings = ratingsDto!.map((r) =>
           ratingRepo.create({
             productId: product.id,
             subCategory: r.subCategory,
@@ -36,16 +39,23 @@ export class ProductsService {
           }),
         );
         await ratingRepo.save(ratings);
-      } else {
-        product.ratings = [];
       }
-      return await productRepo.save(product);
+
+      return product;
     });
-    return created;
   }
 
-  findAll() {
-    return `This action returns all products`;
+  findAll(q: FindProductQueryDto): Promise<Product[]> {
+    const where = {};
+
+    if (q) {
+      where['status'] = q.status;
+    }
+    const products = this.productRepository.find({
+      where,
+      relations: ['category', 'ratings'],
+    });
+    return products;
   }
 
   findOne(id: number) {
@@ -53,10 +63,21 @@ export class ProductsService {
   }
 
   update(id: number, updateProductDto: UpdateProductDto) {
-    return `This action updates a #${id} product`;
+    return this.dataSource.transaction(async (manager) => {
+      const productRepo = manager.getRepository(Product);
+
+      const { ...productData } = updateProductDto;
+
+      await productRepo.update(id, productData as Partial<Product>);
+
+      return productRepo.findOne({
+        where: { id: id.toString() },
+        relations: ['category', 'ratings'],
+      });
+    });
   }
 
   remove(id: number) {
-    return `This action removes a #${id} product`;
+    return this.productRepository.delete(id);
   }
 }

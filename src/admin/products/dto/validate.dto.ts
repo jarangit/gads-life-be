@@ -1,0 +1,13 @@
+import { IsEnum, IsOptional } from 'class-validator';
+
+export enum ProductStatus {
+  DRAFT = 'draft',
+  PUBLISHED = 'published',
+}
+
+export class FindProductQueryDto {
+  /** ?status=PUBLISHED */
+  @IsOptional()
+  @IsEnum(ProductStatus)
+  status?: ProductStatus;
+}
