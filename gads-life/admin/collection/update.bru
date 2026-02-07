@@ -1,0 +1,25 @@
+meta {
+  name: update
+  type: http
+  seq: 5
+}
+
+patch {
+  url: {{local}}/admin/collections/9QZ0PhuUnX
+  body: json
+  auth: inherit
+}
+
+headers {
+  X-ADMIN-KEY: {{api-key}}
+}
+
+body:json {
+  {
+      "titleTh": "edit"
+  }
+}
+
+settings {
+  encodeUrl: true
+}

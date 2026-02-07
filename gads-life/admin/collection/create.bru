@@ -1,0 +1,29 @@
+meta {
+  name: create
+  type: http
+  seq: 3
+}
+
+post {
+  url: {{local}}/admin/collections
+  body: json
+  auth: inherit
+}
+
+headers {
+  Content-Type: application/json
+  X-ADMIN-KEY: {{api-key}}
+}
+
+body:json {
+  {
+    "type": "TOP_LIST",
+    "slug": "electronic1s2",
+    "titleTh": "5 อันดับหุ่นยนต์ดูดฝุ่นที่ดีที่สุด1",
+    "categoryId": "DWSvKo3gGU"
+  }
+}
+
+settings {
+  encodeUrl: true
+}

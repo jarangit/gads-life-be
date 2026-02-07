@@ -6,14 +6,14 @@ import { ResponseInterceptor } from './common/interceptor/response.interceptor';
 async function bootstrap() {
   const logger = new Logger('Bootstrap');
   logger.log('Starting application...');
-  
+
   try {
     const app = await NestFactory.create(AppModule, {
       logger: ['error', 'warn', 'log', 'debug', 'verbose'],
     });
-    
+
     logger.log('NestFactory.create completed');
-    
+
     app.useGlobalPipes(
       new ValidationPipe({
         whitelist: true,
@@ -22,7 +22,7 @@ async function bootstrap() {
       }),
     );
     app.useGlobalInterceptors(new ResponseInterceptor());
-    
+
     const port = process.env.PORT ?? 3001;
     await app.listen(port);
     logger.log(`Application is running on port ${port}`);

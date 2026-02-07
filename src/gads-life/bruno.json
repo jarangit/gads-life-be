@@ -1,0 +1,9 @@
+{
+  "version": "1",
+  "name": "gads-life-buno-api",
+  "type": "collection",
+  "ignore": [
+    "node_modules",
+    ".git"
+  ]
+}

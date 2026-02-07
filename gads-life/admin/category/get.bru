@@ -1,0 +1,19 @@
+meta {
+  name: get
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{local}}/admin/category
+  body: json
+  auth: inherit
+}
+
+headers {
+  X-ADMIN-KEY: {{api-key}}
+}
+
+settings {
+  encodeUrl: true
+}

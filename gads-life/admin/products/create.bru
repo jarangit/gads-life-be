@@ -1,0 +1,56 @@
+meta {
+  name: create
+  type: http
+  seq: 3
+}
+
+post {
+  url: {{local}}/admin/products
+  body: json
+  auth: inherit
+}
+
+headers {
+  Content-Type: application/json
+  X-ADMIN-KEY: {{api-key}}
+}
+
+body:json {
+  {
+    "name": "Apple AirPods 4",
+    "subtitle": "หูฟังไร้สายทรงคลาสสิก ใช้งานง่าย เหมาะกับชีวิตประจำวัน",
+    "image": null,
+    "overallScore": 4.1,
+    "isRecommended": true,
+  
+    "price": 6700,
+    "currency": "THB",
+    "priceLabel": "ระดับกลาง เข้าถึงง่ายในกลุ่มหูฟัง Apple",
+  
+    "affiliateLink": null,
+    "lastUpdated": "2026-02-03",
+  
+    "ratings": [
+      {
+        "subCategory": "ความสะดวกในการพกพา",
+        "score": 5
+      },
+      {
+        "subCategory": "ความเร็วในการชาร์จ",
+        "score": 4
+      },
+      {
+        "subCategory": "ดีไซน์และวัสดุ",
+        "score": 4
+      },
+      {
+        "subCategory": "ความคุ้มค่า",
+        "score": 4
+      }
+    ]
+  }
+}
+
+settings {
+  encodeUrl: true
+}
