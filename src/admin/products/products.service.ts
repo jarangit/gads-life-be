@@ -67,7 +67,7 @@ export class ProductsService {
     return `This action returns a #${id} product`;
   }
 
-  update(id: number, updateProductDto: UpdateProductDto) {
+  update(id: string, updateProductDto: UpdateProductDto) {
     return this.dataSource.transaction(async (manager) => {
       const productRepo = manager.getRepository(Product);
 
