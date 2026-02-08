@@ -5,13 +5,14 @@ meta {
 }
 
 get {
-  url: {{local}}/admin/products?status=darft
+  url: {{local}}/admin/products?status=draft&categoryId=123
   body: none
   auth: inherit
 }
 
 params:query {
-  status: darft
+  status: draft
+  categoryId: 123
 }
 
 headers {

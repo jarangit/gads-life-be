@@ -10,4 +10,7 @@ export class FindProductQueryDto {
   @IsOptional()
   @IsEnum(ProductStatus)
   status?: ProductStatus;
+
+  @IsOptional()
+  categoryId?: string;
 }

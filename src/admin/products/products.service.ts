@@ -46,11 +46,16 @@ export class ProductsService {
   }
 
   findAll(q: FindProductQueryDto): Promise<Product[]> {
-    const where = {};
-
+    // Loop through query object และเพิ่มเฉพาะ field ที่มีค่า
+    const where: Record<string, unknown> = {};
     if (q) {
-      where['status'] = q.status;
+      Object.entries(q).forEach(([key, value]) => {
+        if (value !== undefined && value !== null && value !== '') {
+          where[key] = value;
+        }
+      });
     }
+
     const products = this.productRepository.find({
       where,
       relations: ['category', 'ratings'],
