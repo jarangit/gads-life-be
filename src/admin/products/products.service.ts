@@ -45,7 +45,10 @@ export class ProductsService {
     });
   }
 
-  findAll(q: FindProductQueryDto): Promise<Product[]> {
+  async findAll(q: FindProductQueryDto): Promise<{
+    items: Product[];
+    total: number;
+  }> {
     // Loop through query object และเพิ่มเฉพาะ field ที่มีค่า
     const where: Record<string, unknown> = {};
     if (q) {
@@ -56,15 +59,21 @@ export class ProductsService {
       });
     }
 
-    const products = this.productRepository.find({
+    const products = await this.productRepository.find({
       where,
       relations: ['category', 'ratings'],
     });
-    return products;
+    const total = products.length;
+    const data = { items: products, total };
+    return data;
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} product`;
+  findOne(id: string) {
+    const product = this.productRepository.findOne({
+      where: { id },
+      relations: ['category', 'ratings'],
+    });
+    return product;
   }
 
   update(id: string, updateProductDto: UpdateProductDto) {

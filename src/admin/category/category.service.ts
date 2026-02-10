@@ -23,10 +23,13 @@ export class CategoryService {
     return this.categoryRepository.save(category);
   }
 
-  findAll() {
-    // TODO: Implement findAll method
-    const data = this.categoryRepository.find();
-    return data;
+  async findAll() {
+    const data = await this.categoryRepository.find();
+    const res = {
+      items: data,
+      total: data.length,
+    };
+    return res;
   }
 
   findOne(slug: string) {
