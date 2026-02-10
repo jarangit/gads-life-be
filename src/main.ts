@@ -14,6 +14,8 @@ async function bootstrap() {
 
     logger.log('NestFactory.create completed');
 
+    app.setGlobalPrefix('api/v1');
+
     app.useGlobalPipes(
       new ValidationPipe({
         whitelist: true,
@@ -24,6 +26,16 @@ async function bootstrap() {
     app.useGlobalInterceptors(new ResponseInterceptor());
 
     const port = process.env.PORT ?? 3001;
+    app.enableCors({
+      origin: [
+        'http://localhost:3000', // dev web
+        'http://localhost:5173', // vite
+        'https://yourdomain.com', // prod web
+      ],
+      methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+      allowedHeaders: ['Content-Type', 'Authorization', 'X-ADMIN-KEY'],
+      credentials: true, // ถ้าใช้ cookie / session
+    });
     await app.listen(port);
     logger.log(`Application is running on port ${port}`);
   } catch (error) {
