@@ -6,7 +6,6 @@ export enum ProductStatus {
 }
 
 export class FindProductQueryDto {
-  /** ?status=PUBLISHED */
   @IsOptional()
   @IsEnum(ProductStatus)
   status?: ProductStatus;

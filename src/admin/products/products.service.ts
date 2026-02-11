@@ -71,7 +71,7 @@ export class ProductsService {
   findOne(id: string) {
     const product = this.productRepository.findOne({
       where: { id },
-      relations: ['category', 'ratings'],
+      relations: ['category', 'ratings', 'brand'],
     });
     return product;
   }
