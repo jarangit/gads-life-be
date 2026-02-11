@@ -61,7 +61,7 @@ export class ProductsService {
 
     const products = await this.productRepository.find({
       where,
-      relations: ['category', 'ratings'],
+      relations: ['category', 'ratings', 'brand'],
     });
     const total = products.length;
     const data = { items: products, total };

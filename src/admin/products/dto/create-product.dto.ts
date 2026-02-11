@@ -31,6 +31,10 @@ export class CreateProductDto {
   @IsString()
   @IsOptional()
   categoryId?: string | null;
+
+  @IsString()
+  @IsOptional()
+  brandId?: string | null;
   /** ชื่อสินค้า */
   @IsString()
   @IsNotEmpty()

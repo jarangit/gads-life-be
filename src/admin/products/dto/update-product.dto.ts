@@ -8,6 +8,10 @@ export class UpdateProductDto extends PartialType(CreateProductRatingDto) {
   @IsOptional()
   categoryId?: string | null;
 
+  @IsString()
+  @IsOptional()
+  brandId?: string | null;
+
   @IsOptional()
   @IsEnum(ProductStatus)
   status?: ProductStatus;

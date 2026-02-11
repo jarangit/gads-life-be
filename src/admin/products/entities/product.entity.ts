@@ -34,7 +34,7 @@ export class Product {
   @JoinColumn({ name: 'category_id' })
   category: Category | null;
 
-  @Column({ type: 'varchar', length: 255, unique: true })
+  @Column({ type: 'varchar', length: 10, name: 'brand_id', nullable: true })
   brandId: string | null;
 
   // brand relation

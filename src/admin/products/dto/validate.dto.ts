@@ -13,4 +13,7 @@ export class FindProductQueryDto {
 
   @IsOptional()
   categoryId?: string;
+
+  @IsOptional()
+  brandId?: string;
 }
