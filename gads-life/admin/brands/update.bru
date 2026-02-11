@@ -1,0 +1,28 @@
+meta {
+  name: update
+  type: http
+  seq: 5
+}
+
+patch {
+  url: {{local}}/admin/category/41ea1bd7-a983-4129-8eeb-87d5f9586e45
+  body: json
+  auth: inherit
+}
+
+headers {
+  X-ADMIN-KEY: {{api-key}}
+}
+
+body:json {
+  {
+      "slug": "laptops",
+      "nameTh": "แล็ปท็อป edit",
+      "nameEn": "Laptop",
+  }
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

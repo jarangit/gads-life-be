@@ -1,0 +1,20 @@
+meta {
+  name: list
+  type: http
+  seq: 4
+}
+
+get {
+  url: {{local}}/admin/brands
+  body: none
+  auth: inherit
+}
+
+headers {
+  X-ADMIN-KEY: {{api-key}}
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}
