@@ -165,7 +165,7 @@ export class ProductsService {
     });
   }
 
-  remove(id: number) {
+  remove(id: string) {
     return this.productRepository.delete(id);
   }
 }
