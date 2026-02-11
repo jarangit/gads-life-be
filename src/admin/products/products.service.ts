@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { DataSource, Repository } from 'typeorm';
@@ -6,6 +6,8 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Product } from './entities/product.entity';
 import { ProductRating } from './entities/product-rating.entity';
 import { FindProductQueryDto } from './dto/validate.dto';
+import { Category } from '../category/entities/category.entity';
+import { Brand } from '../brands/entities/brand.entity';
 
 @Injectable()
 export class ProductsService {
@@ -17,8 +19,38 @@ export class ProductsService {
 
     @InjectRepository(ProductRating)
     private readonly productRatingRepository: Repository<ProductRating>,
+
+    @InjectRepository(Category)
+    private readonly categoryRepository: Repository<Category>,
+
+    @InjectRepository(Brand)
+    private readonly brandRepository: Repository<Brand>,
   ) {}
   async create(createProductDto: CreateProductDto): Promise<Product> {
+    // Validate categoryId exists
+    if (createProductDto.categoryId) {
+      const category = await this.categoryRepository.findOne({
+        where: { id: createProductDto.categoryId },
+      });
+      if (!category) {
+        throw new BadRequestException(
+          `Category with id "${createProductDto.categoryId}" not found`,
+        );
+      }
+    }
+
+    // Validate brandId exists
+    if (createProductDto.brandId) {
+      const brand = await this.brandRepository.findOne({
+        where: { id: createProductDto.brandId },
+      });
+      if (!brand) {
+        throw new BadRequestException(
+          `Brand with id "${createProductDto.brandId}" not found`,
+        );
+      }
+    }
+
     return this.dataSource.transaction(async (manager) => {
       const productRepo = manager.getRepository(Product);
       const ratingRepo = manager.getRepository(ProductRating);
@@ -76,17 +108,59 @@ export class ProductsService {
     return product;
   }
 
-  update(id: string, updateProductDto: UpdateProductDto) {
+  async update(id: string, updateProductDto: UpdateProductDto) {
+    // Validate categoryId exists
+    if (updateProductDto.categoryId) {
+      const category = await this.categoryRepository.findOne({
+        where: { id: updateProductDto.categoryId },
+      });
+      if (!category) {
+        throw new BadRequestException(
+          `Category with id "${updateProductDto.categoryId}" not found`,
+        );
+      }
+    }
+
+    // Validate brandId exists
+    if (updateProductDto.brandId) {
+      const brand = await this.brandRepository.findOne({
+        where: { id: updateProductDto.brandId },
+      });
+      if (!brand) {
+        throw new BadRequestException(
+          `Brand with id "${updateProductDto.brandId}" not found`,
+        );
+      }
+    }
+
     return this.dataSource.transaction(async (manager) => {
       const productRepo = manager.getRepository(Product);
+      const ratingRepo = manager.getRepository(ProductRating);
 
-      const { ...productData } = updateProductDto;
+      // Exclude ratings from product update data
+      const { ratings: ratingsDto, ...productData } = updateProductDto;
 
       await productRepo.update(id, productData as Partial<Product>);
 
+      // Update ratings if provided
+      if (ratingsDto && ratingsDto.length > 0) {
+        // Delete existing ratings
+        await ratingRepo.delete({ productId: id });
+
+        // Create new ratings
+        const ratings = ratingsDto.map((r) =>
+          ratingRepo.create({
+            productId: id,
+            subCategory: r.subCategory,
+            score: r.score,
+          }),
+        );
+        await ratingRepo.save(ratings);
+      }
+
       return productRepo.findOne({
         where: { id: id.toString() },
-        relations: ['category', 'ratings'],
+        relations: ['category', 'ratings', 'brand'],
       });
     });
   }
