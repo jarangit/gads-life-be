@@ -13,6 +13,7 @@ import { ProductRating } from './product-rating.entity';
 import { nanoid10 } from '../../../utils/nanoid';
 import { Category } from './../../category/entities/category.entity';
 import { ProductStatus } from '../dto/validate.dto';
+import { Brand } from '../../brands/entities/brand.entity';
 
 @Entity('products')
 export class Product {
@@ -32,6 +33,14 @@ export class Product {
   @ManyToOne(() => Category, (c) => c.products, { onDelete: 'SET NULL' })
   @JoinColumn({ name: 'category_id' })
   category: Category | null;
+
+  @Column({ type: 'varchar', length: 255, unique: true })
+  brandId: string | null;
+
+  // brand relation
+  @ManyToOne(() => Brand, (b) => b.products, { onDelete: 'SET NULL' })
+  @JoinColumn({ name: 'brand_id' })
+  brand: Brand | null;
 
   /** ชื่อสินค้า */
   @Column({ type: 'varchar', length: 255 })
