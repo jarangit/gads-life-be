@@ -7,6 +7,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { CollectionModule } from './admin/collection/collection.module';
 import { ProductsModule } from './admin/products/products.module';
 import { BrandsModule } from './admin/brands/brands.module';
+import { PublicModule } from './public/public.module';
 
 @Module({
   imports: [
@@ -28,6 +29,7 @@ import { BrandsModule } from './admin/brands/brands.module';
     CollectionModule,
     ProductsModule,
     BrandsModule,
+    PublicModule,
   ],
   controllers: [AppController],
   providers: [AppService],

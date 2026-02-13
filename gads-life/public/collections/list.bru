@@ -1,0 +1,23 @@
+meta {
+  name: list
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{local}}/public/collections
+  body: none
+  auth: inherit
+}
+
+params:query {
+  page: 1
+  limit: 20
+  ~categoryId: {{publicCategoryId}}
+  ~type: TOP_LIST
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

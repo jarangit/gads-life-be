@@ -1,0 +1,24 @@
+meta {
+  name: list
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{local}}/public/products
+  body: none
+  auth: inherit
+}
+
+params:query {
+  page: 1
+  limit: 20
+  ~categoryId: {{publicCategoryId}}
+  ~brandId: {{publicBrandId}}
+  ~sort: latest
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}
