@@ -12,13 +12,9 @@ export class ResponseInterceptor<T> implements NestInterceptor<T, any> {
   intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
     return next.handle().pipe(
       map((data: Record<string, unknown> | undefined) => {
-        const message =
-          typeof data?.message === 'string' ? data.message : 'Success';
-        return {
-          success: true,
-          message,
-          data: data?.data !== undefined ? data.data : data,
-        };
+        // const message =
+        //   typeof data?.message === 'string' ? data.message : 'Success';
+        return data?.data !== undefined ? data.data : data;
       }),
     );
   }
