@@ -3,6 +3,7 @@ import { PublicProductsModule } from './public-products/public-products.module';
 import { PublicCategoriesModule } from './public-categories/public-categories.module';
 import { PublicBrandsModule } from './public-brands/public-brands.module';
 import { PublicCollectionsModule } from './public-collections/public-collections.module';
+import { HomeModule } from './home/home.module';
 
 @Module({
   imports: [
@@ -10,6 +11,7 @@ import { PublicCollectionsModule } from './public-collections/public-collections
     PublicCategoriesModule,
     PublicBrandsModule,
     PublicCollectionsModule,
+    HomeModule,
   ],
 })
 export class PublicModule {}
