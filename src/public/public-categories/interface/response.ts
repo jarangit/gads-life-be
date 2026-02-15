@@ -1,9 +1,9 @@
 export interface ICategoryProductsResponse {
   category: Category;
   // query: Query;
-  items: Item[];
+  items?: Item[];
   // facets: Facets;
-  pagination: Pagination;
+  pagination?: Pagination;
 }
 
 export interface Category {
@@ -17,6 +17,8 @@ export interface Category {
   orderIndex: number;
   createdAt: Date;
   updatedAt: Date;
+  // optional
+  productCount?: number;
 }
 
 export interface SEO {

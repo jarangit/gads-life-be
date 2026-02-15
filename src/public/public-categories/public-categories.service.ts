@@ -4,14 +4,13 @@ import { Repository } from 'typeorm';
 import { Category } from '../../admin/category/entities/category.entity';
 import {
   buildPaginationOptions,
-  buildPaginationResult,
-  PaginationResult,
 } from '../../common/dto/pagination-query.dto';
 import { FindPublicCategoriesDto } from './dto/find-public-categories.dto';
 import { Product } from '../../admin/products/entities/product.entity';
 import { ProductStatus } from '../../admin/products/dto/validate.dto';
 import { ICategoryProductsResponse } from './interface/response';
 import { toPublicCategory } from './public-categories.mapper';
+import { ICategoriesListResponse } from './interface/list-respoce';
 
 @Injectable()
 export class PublicCategoriesService {
@@ -25,7 +24,7 @@ export class PublicCategoriesService {
 
   async findAll(
     query: FindPublicCategoriesDto,
-  ): Promise<PaginationResult<ICategoryProductsResponse>> {
+  ): Promise<ICategoriesListResponse> {
     const { page, limit, skip } = buildPaginationOptions(query);
 
     const [categories, total] = await this.categoryRepository.findAndCount({
@@ -37,27 +36,31 @@ export class PublicCategoriesService {
       skip,
       take: limit,
     });
-
-    const items = await Promise.all(
+    // find product count for each category
+    const categoriesWithCount = await Promise.all(
       categories.map(async (category) => {
-        const [products, productTotal] =
-          await this.findPublishedProducts(category.id);
-
-        return toPublicCategory(category, products, {
-          total: productTotal,
-          page: 1,
-          limit: productTotal,
-          totalPages: 1,
+        const productCount = await this.productRepository.count({
+          where: {
+            category: { id: category.id },
+            status: ProductStatus.PUBLISHED,
+          },
         });
+        return {
+          ...category,
+          productCount,
+        };
       }),
     );
 
-    return buildPaginationResult({
-      items,
-      total,
-      page,
-      limit,
-    });
+    return {
+      items: categoriesWithCount,
+      pagination: {
+        total: total,
+        page: page,
+        limit: limit,
+        totalPages: Math.ceil(total / limit),
+      },
+    };
   }
 
   async findOne(slug: string): Promise<ICategoryProductsResponse> {
@@ -71,8 +74,9 @@ export class PublicCategoriesService {
       );
     }
 
-    const [products, productTotal] =
-      await this.findPublishedProducts(category.id);
+    const [products, productTotal] = await this.findPublishedProducts(
+      category.id,
+    );
 
     return toPublicCategory(category, products, {
       total: productTotal,
