@@ -6,6 +6,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Category } from '../../admin/category/entities/category.entity';
 import { Repository } from 'typeorm';
 import { Product } from '../../admin/products/entities/product.entity';
+import { Brand } from '../../admin/brands/entities/brand.entity';
 
 @Injectable()
 export class HomeService {
@@ -15,6 +16,9 @@ export class HomeService {
 
     @InjectRepository(Product)
     private productRepository: Repository<Product>,
+
+    @InjectRepository(Brand)
+    private brandRepository: Repository<Brand>,
   ) {}
   create(createHomeDto: CreateHomeDto) {
     return 'This action adds a new home';
@@ -22,34 +26,23 @@ export class HomeService {
 
   async findAll(): Promise<IHomeResponse> {
     const categories = await this.categoryRepository.find();
-    const products = await this.productRepository.find({
-      where: { isRecommended: true },
+    const topPickProduct = await this.productRepository.find({
       order: { updatedAt: 'DESC' },
-      take: 10,
+      take: 5,
+    });
+    const lastReviewProduct = await this.productRepository.find({
+      order: { updatedAt: 'DESC' },
+      take: 5,
+    });
+    const topBrands = await this.brandRepository.find({
+      order: { updatedAt: 'DESC' },
+      take: 5,
     });
     return {
       categories,
-      topPicks: products.map((p) => ({
-        id: p.id,
-        name: p.name,
-        subtitle: p.subtitle,
-        image: p.image ?? null,
-        overallScore: p.overallScore,
-        isRecommended: p.isRecommended,
-        price: p.price,
-        currency: p.currency,
-        priceLabel: p.priceLabel,
-        affiliateLink: p.affiliateLink ?? null,
-        lastUpdated: p.updatedAt.toISOString(),
-        status: p.status,
-        categoryId: p.categoryId,
-        brandId: p.brandId,
-        category: p.category,
-        brand: p.brand,
-        ratings: p.ratings,
-        createdAt: p.createdAt,
-        updatedAt: p.updatedAt,
-      })),
+      topPicks: topPickProduct,
+      lastReview: lastReviewProduct,
+      topBrands,
     };
   }
 

@@ -17,13 +17,13 @@ export type PublicProductResponse = {
   id: string;
   name: string;
   subtitle: string;
-  image: string | null;
+  image?: string | null | undefined;
   overallScore: number;
   isRecommended: boolean;
   price: number;
   currency: string;
   priceLabel: string;
-  affiliateLink: string | null;
+  affiliateLink?: string | null;
   lastUpdated: string;
   status: ProductStatus;
   categoryId: string | null;
@@ -82,7 +82,9 @@ export class PublicProductsService {
     });
 
     if (!product) {
-      throw new NotFoundException(`Published product with id "${id}" not found`);
+      throw new NotFoundException(
+        `Published product with id "${id}" not found`,
+      );
     }
 
     return this.toPublicProduct(product);

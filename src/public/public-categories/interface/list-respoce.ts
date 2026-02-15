@@ -1,4 +1,4 @@
-import { Category, Pagination } from "./response";
+import { Category, Pagination } from './response';
 
 export interface ICategoriesListResponse {
   items: Category[];
