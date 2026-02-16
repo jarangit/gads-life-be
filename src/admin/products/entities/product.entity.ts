@@ -40,8 +40,8 @@ export class Product {
   }
 
   /** URL-friendly slug (auto-generated from name, editable) */
-  @Column({ type: 'varchar', length: 500, unique: true })
-  slug: string;
+  @Column({ type: 'varchar', length: 500, nullable: true })
+  slug?: string;
 
   // categoryId: string; // FK ไป categories.id (ถ้ามีหลายหมวด อาจต้องทำเป็น many-to-many)
   @Column({ type: 'varchar', length: 10, name: 'category_id', nullable: true })
@@ -124,7 +124,9 @@ export class Product {
   weaknesses: ProductWeakness[];
 
   /** before purchase points */
-  @OneToMany(() => ProductBeforePurchasePoint, (x) => x.product, { cascade: true })
+  @OneToMany(() => ProductBeforePurchasePoint, (x) => x.product, {
+    cascade: true,
+  })
   beforePurchasePoints: ProductBeforePurchasePoint[];
 
   /** after usage points */
