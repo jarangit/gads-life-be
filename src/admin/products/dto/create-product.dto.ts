@@ -14,6 +14,7 @@ import {
   ValidateNested,
 } from 'class-validator';
 import { ProductStatus } from './validate.dto';
+import { FinalVerdictType } from '../entities/product-final-verdict-point.entity';
 
 // ─── Nested DTOs ────────────────────────────────────────
 
@@ -75,6 +76,20 @@ export class CreateProductPricingDto {
   @IsString()
   @IsNotEmpty()
   priceLabel: string;
+}
+
+export class CreateFinalVerdictPointDto {
+  @IsEnum(FinalVerdictType)
+  type: FinalVerdictType;
+
+  @IsString()
+  @IsNotEmpty()
+  text: string;
+
+  @IsOptional()
+  @IsInt()
+  @Min(0)
+  orderIndex?: number;
 }
 
 // ─── Main DTO ───────────────────────────────────────────
@@ -216,4 +231,11 @@ export class CreateProductDto {
   @ValidateNested()
   @Type(() => CreateProductPricingDto)
   pricing?: CreateProductPricingDto;
+
+  /** Final Verdict Points (BUY_IF / SKIP_IF) */
+  @IsOptional()
+  @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => CreateFinalVerdictPointDto)
+  finalVerdictPoints?: CreateFinalVerdictPointDto[];
 }

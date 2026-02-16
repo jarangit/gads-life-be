@@ -9,6 +9,7 @@ import { ProductCon } from './entities/product-con.entity';
 import { ProductQuickVerdict } from './entities/product-quick-verdict.entity';
 import { ProductQuickVerdictTag } from './entities/product-quick-verdict-tag.entity';
 import { ProductPricing } from './entities/product-pricing.entity';
+import { ProductFinalVerdictPoint } from './entities/product-final-verdict-point.entity';
 
 /**
  * Register all new product-detail entities so that
@@ -28,6 +29,7 @@ import { ProductPricing } from './entities/product-pricing.entity';
       ProductQuickVerdict,
       ProductQuickVerdictTag,
       ProductPricing,
+      ProductFinalVerdictPoint,
     ]),
   ],
   exports: [TypeOrmModule],

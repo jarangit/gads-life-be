@@ -11,6 +11,11 @@ export class PublicProductsController {
     return this.publicProductsService.findAll(query);
   }
 
+  @Get('slug/:slug')
+  findBySlug(@Param('slug') slug: string) {
+    return this.publicProductsService.findBySlug(slug);
+  }
+
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.publicProductsService.findOne(id);

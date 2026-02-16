@@ -25,6 +25,7 @@ import { ProductCon } from './product-con.entity';
 import { ProductQuickVerdict } from './product-quick-verdict.entity';
 import { ProductQuickVerdictTag } from './product-quick-verdict-tag.entity';
 import { ProductPricing } from './product-pricing.entity';
+import { ProductFinalVerdictPoint } from './product-final-verdict-point.entity';
 
 @Entity('products')
 export class Product {
@@ -152,6 +153,10 @@ export class Product {
   /** pricing (1:1) */
   @OneToOne(() => ProductPricing, (x) => x.product, { cascade: true })
   pricing: ProductPricing;
+
+  /** final verdict points (buy_if / skip_if) */
+  @OneToMany(() => ProductFinalVerdictPoint, (x) => x.product, { cascade: true })
+  finalVerdictPoints: ProductFinalVerdictPoint[];
 
   @Column({
     type: 'varchar',

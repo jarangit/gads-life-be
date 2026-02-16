@@ -1,6 +1,7 @@
 export type PublicProductResponse = {
   id: string;
   name: string;
+  slug?: string;
   categoryId: string;
   category?: any;
   brandId: string;

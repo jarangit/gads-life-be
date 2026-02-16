@@ -106,6 +106,7 @@ export class ProductsService {
         'quickVerdict',
         'quickVerdictTags',
         'pricing',
+        'finalVerdictPoints',
       ],
     });
     const total = products.length;
@@ -129,6 +130,7 @@ export class ProductsService {
         'quickVerdict',
         'quickVerdictTags',
         'pricing',
+        'finalVerdictPoints',
       ],
     });
     return product;
@@ -199,6 +201,7 @@ export class ProductsService {
           'quickVerdict',
           'quickVerdictTags',
           'pricing',
+          'finalVerdictPoints',
         ],
       });
     });

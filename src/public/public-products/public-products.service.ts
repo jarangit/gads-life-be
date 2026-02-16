@@ -12,6 +12,7 @@ import { ProductCon } from '../../admin/products/entities/product-con.entity';
 import { ProductQuickVerdict } from '../../admin/products/entities/product-quick-verdict.entity';
 import { ProductQuickVerdictTag } from '../../admin/products/entities/product-quick-verdict-tag.entity';
 import { ProductPricing } from '../../admin/products/entities/product-pricing.entity';
+import { ProductFinalVerdictPoint } from '../../admin/products/entities/product-final-verdict-point.entity';
 import {
   buildPaginationOptions,
   buildPaginationResult,
@@ -25,6 +26,7 @@ import {
 export type PublicProductResponse = {
   id: string;
   name: string;
+  slug?: string;
   subtitle: string;
   image?: string | null | undefined;
   overallScore: number;
@@ -49,6 +51,7 @@ export type PublicProductResponse = {
   quickVerdict: ProductQuickVerdict | null;
   quickVerdictTags: ProductQuickVerdictTag[];
   pricing: ProductPricing | null;
+  finalVerdictPoints: ProductFinalVerdictPoint[];
   createdAt: Date;
   updatedAt: Date;
 };
@@ -92,6 +95,7 @@ export class PublicProductsService {
         'quickVerdict',
         'quickVerdictTags',
         'pricing',
+        'finalVerdictPoints',
       ],
       order: this.resolveSort(query.sort),
       skip,
@@ -122,12 +126,42 @@ export class PublicProductsService {
         'quickVerdict',
         'quickVerdictTags',
         'pricing',
+        'finalVerdictPoints',
       ],
     });
 
     if (!product) {
       throw new NotFoundException(
         `Published product with id "${id}" not found`,
+      );
+    }
+
+    return this.toPublicProduct(product);
+  }
+
+  async findBySlug(slug: string): Promise<PublicProductResponse> {
+    const product = await this.productRepository.findOne({
+      where: { slug, status: ProductStatus.PUBLISHED },
+      relations: [
+        'category',
+        'brand',
+        'ratings',
+        'keyHighlights',
+        'weaknesses',
+        'beforePurchasePoints',
+        'afterUsagePoints',
+        'pros',
+        'cons',
+        'quickVerdict',
+        'quickVerdictTags',
+        'pricing',
+        'finalVerdictPoints',
+      ],
+    });
+
+    if (!product) {
+      throw new NotFoundException(
+        `Published product with slug "${slug}" not found`,
       );
     }
 
@@ -150,34 +184,36 @@ export class PublicProductsService {
 
   private toPublicProduct(product: Product): PublicProductResponse {
     return {
-      id: product.id,
-      name: product.name,
-      subtitle: product.subtitle,
-      image: product.image ?? null,
-      overallScore: Number(product.overallScore),
-      isRecommended: product.isRecommended,
-      price: product.price,
-      currency: product.currency,
-      priceLabel: product.priceLabel,
-      affiliateLink: product.affiliateLink ?? null,
-      lastUpdated: product.lastUpdated,
-      status: product.status,
-      categoryId: product.categoryId,
-      brandId: product.brandId,
-      category: product.category,
-      brand: product.brand,
-      ratings: product.ratings,
-      keyHighlights: product.keyHighlights ?? [],
-      weaknesses: product.weaknesses ?? [],
-      beforePurchasePoints: product.beforePurchasePoints ?? [],
-      afterUsagePoints: product.afterUsagePoints ?? [],
-      pros: product.pros ?? [],
-      cons: product.cons ?? [],
-      quickVerdict: product.quickVerdict ?? null,
-      quickVerdictTags: product.quickVerdictTags ?? [],
-      pricing: product.pricing ?? null,
-      createdAt: product.createdAt,
-      updatedAt: product.updatedAt,
+      ...product,
+      // id: product.id,
+      // name: product.name,
+      // slug: product.slug,
+      // subtitle: product.subtitle,
+      // image: product.image ?? null,
+      // overallScore: Number(product.overallScore),
+      // isRecommended: product.isRecommended,
+      // price: product.price,
+      // currency: product.currency,
+      // priceLabel: product.priceLabel,
+      // affiliateLink: product.affiliateLink ?? null,
+      // lastUpdated: product.lastUpdated,
+      // status: product.status,
+      // categoryId: product.categoryId,
+      // brandId: product.brandId,
+      // category: product.category,
+      // brand: product.brand,
+      // ratings: product.ratings,
+      // keyHighlights: product.keyHighlights ?? [],
+      // weaknesses: product.weaknesses ?? [],
+      // beforePurchasePoints: product.beforePurchasePoints ?? [],
+      // afterUsagePoints: product.afterUsagePoints ?? [],
+      // pros: product.pros ?? [],
+      // cons: product.cons ?? [],
+      // quickVerdict: product.quickVerdict ?? null,
+      // quickVerdictTags: product.quickVerdictTags ?? [],
+      // pricing: product.pricing ?? null,
+      // createdAt: product.createdAt,
+      // updatedAt: product.updatedAt,
     };
   }
 }
