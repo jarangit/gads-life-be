@@ -1,13 +1,18 @@
 meta {
-  name: delete
+  name: get product item
   type: http
-  seq: 1
+  seq: 5
 }
 
-delete {
-  url: {{local}}/admin/collections/B9tMdZ4V3G
+get {
+  url: {{local}}/admin/products
   body: none
   auth: inherit
+}
+
+params:query {
+  ~status: draft
+  ~categoryId: k50bgR3E05
 }
 
 headers {

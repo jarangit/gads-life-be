@@ -3,6 +3,15 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { FindOptionsOrder, FindOptionsWhere, Repository } from 'typeorm';
 import { Product } from '../../admin/products/entities/product.entity';
 import { ProductStatus } from '../../admin/products/dto/validate.dto';
+import { ProductKeyHighlight } from '../../admin/products/entities/product-key-highlight.entity';
+import { ProductWeakness } from '../../admin/products/entities/product-weakness.entity';
+import { ProductBeforePurchasePoint } from '../../admin/products/entities/product-before-purchase-point.entity';
+import { ProductAfterUsagePoint } from '../../admin/products/entities/product-after-usage-point.entity';
+import { ProductPro } from '../../admin/products/entities/product-pro.entity';
+import { ProductCon } from '../../admin/products/entities/product-con.entity';
+import { ProductQuickVerdict } from '../../admin/products/entities/product-quick-verdict.entity';
+import { ProductQuickVerdictTag } from '../../admin/products/entities/product-quick-verdict-tag.entity';
+import { ProductPricing } from '../../admin/products/entities/product-pricing.entity';
 import {
   buildPaginationOptions,
   buildPaginationResult,
@@ -31,6 +40,15 @@ export type PublicProductResponse = {
   category: Product['category'];
   brand: Product['brand'];
   ratings: Product['ratings'];
+  keyHighlights: ProductKeyHighlight[];
+  weaknesses: ProductWeakness[];
+  beforePurchasePoints: ProductBeforePurchasePoint[];
+  afterUsagePoints: ProductAfterUsagePoint[];
+  pros: ProductPro[];
+  cons: ProductCon[];
+  quickVerdict: ProductQuickVerdict | null;
+  quickVerdictTags: ProductQuickVerdictTag[];
+  pricing: ProductPricing | null;
   createdAt: Date;
   updatedAt: Date;
 };
@@ -61,7 +79,20 @@ export class PublicProductsService {
 
     const [items, total] = await this.productRepository.findAndCount({
       where,
-      relations: ['category', 'brand', 'ratings'],
+      relations: [
+        'category',
+        'brand',
+        'ratings',
+        'keyHighlights',
+        'weaknesses',
+        'beforePurchasePoints',
+        'afterUsagePoints',
+        'pros',
+        'cons',
+        'quickVerdict',
+        'quickVerdictTags',
+        'pricing',
+      ],
       order: this.resolveSort(query.sort),
       skip,
       take: limit,
@@ -78,7 +109,20 @@ export class PublicProductsService {
   async findOne(id: string): Promise<PublicProductResponse> {
     const product = await this.productRepository.findOne({
       where: { id, status: ProductStatus.PUBLISHED },
-      relations: ['category', 'brand', 'ratings'],
+      relations: [
+        'category',
+        'brand',
+        'ratings',
+        'keyHighlights',
+        'weaknesses',
+        'beforePurchasePoints',
+        'afterUsagePoints',
+        'pros',
+        'cons',
+        'quickVerdict',
+        'quickVerdictTags',
+        'pricing',
+      ],
     });
 
     if (!product) {
@@ -123,6 +167,15 @@ export class PublicProductsService {
       category: product.category,
       brand: product.brand,
       ratings: product.ratings,
+      keyHighlights: product.keyHighlights ?? [],
+      weaknesses: product.weaknesses ?? [],
+      beforePurchasePoints: product.beforePurchasePoints ?? [],
+      afterUsagePoints: product.afterUsagePoints ?? [],
+      pros: product.pros ?? [],
+      cons: product.cons ?? [],
+      quickVerdict: product.quickVerdict ?? null,
+      quickVerdictTags: product.quickVerdictTags ?? [],
+      pricing: product.pricing ?? null,
       createdAt: product.createdAt,
       updatedAt: product.updatedAt,
     };

@@ -1,7 +1,7 @@
 meta {
   name: create
   type: http
-  seq: 3
+  seq: 2
 }
 
 post {
@@ -17,37 +17,70 @@ headers {
 
 body:json {
   {
-    "name": "Apple AirPods 4",
-    "subtitle": "หูฟังไร้สายทรงคลาสสิก ใช้งานง่าย เหมาะกับชีวิตประจำวัน",
-    "image": null,
-    "overallScore": 4.1,
+    "categoryId": null,
+    "brandId": null,
+    "name": "Sony WH-1000XM5",
+    "subtitle": "หูฟังไร้สายตัดเสียงรบกวนระดับท็อป ปี 2025",
+    "image": "https://placehold.co/600x400?text=XM5",
+    "overallScore": 4.5,
     "isRecommended": true,
-  
-    "price": 6700,
+    "price": 12990,
     "currency": "THB",
-    "priceLabel": "ระดับกลาง เข้าถึงง่ายในกลุ่มหูฟัง Apple",
-  
-    "affiliateLink": null,
-    "lastUpdated": "2026-02-03",
-  
+    "priceLabel": "฿12,990",
+    "affiliateLink": "https://example.com/aff/xm5",
+    "lastUpdated": "2026-02-16",
+    "status": "draft",
     "ratings": [
-      {
-        "subCategory": "ความสะดวกในการพกพา",
-        "score": 5
-      },
-      {
-        "subCategory": "ความเร็วในการชาร์จ",
-        "score": 4
-      },
-      {
-        "subCategory": "ดีไซน์และวัสดุ",
-        "score": 4
-      },
-      {
-        "subCategory": "ความคุ้มค่า",
-        "score": 4
-      }
-    ]
+      { "subCategory": "คุณภาพเสียง", "score": 5 },
+      { "subCategory": "ความคุ้มค่า", "score": 4 },
+      { "subCategory": "ความสะดวกสบาย", "score": 4 },
+      { "subCategory": "ดีไซน์", "score": 5 },
+      { "subCategory": "แบตเตอรี่", "score": 4 }
+    ],
+    "keyHighlights": [
+      { "content": "ตัดเสียงรบกวนดีที่สุดในรุ่น", "sortOrder": 1 },
+      { "content": "แบตอึด 30 ชม. ฟังได้ทั้งวัน", "sortOrder": 2 },
+      { "content": "Speak-to-Chat หยุดเพลงอัตโนมัติเวลาพูด", "sortOrder": 3 }
+    ],
+    "weaknesses": [
+      { "content": "ราคาสูงกว่าคู่แข่งในเซกเมนต์เดียวกัน", "sortOrder": 1 },
+      { "content": "ไม่มีช่อง 3.5mm แบบ passive", "sortOrder": 2 }
+    ],
+    "beforePurchasePoints": [
+      { "content": "เช็กว่ารองรับ codec LDAC หรือไม่ (ต้องใช้กับมือถือ Android)", "sortOrder": 1 },
+      { "content": "ลองสวมก่อนซื้อ — คนหัวใหญ่อาจรู้สึกแน่น", "sortOrder": 2 },
+      { "content": "ดูราคาเปรียบเทียบ official store vs ตัวแทน", "sortOrder": 3 }
+    ],
+    "afterUsagePoints": [
+      { "content": "อัปเดต firmware ผ่านแอป Sony Headphones Connect ทันที", "sortOrder": 1 },
+      { "content": "ปรับ EQ ในแอปให้เหมาะกับแนวเพลงที่ฟัง", "sortOrder": 2 }
+    ],
+    "pros": [
+      { "content": "ANC ระดับท็อป ตัดเสียงได้เกือบ 100%", "sortOrder": 1 },
+      { "content": "เสียงดี balanced ฟัง pop/jazz/classical ได้หมด", "sortOrder": 2 },
+      { "content": "น้ำหนักเบา สวมทั้งวันไม่ปวดหัว", "sortOrder": 3 },
+      { "content": "Multipoint เชื่อมต่อ 2 อุปกรณ์พร้อมกัน", "sortOrder": 4 }
+    ],
+    "cons": [
+      { "content": "ราคาแพง ไม่เหมาะกับคนงบจำกัด", "sortOrder": 1 },
+      { "content": "Bass ไม่แน่นเท่า XM4 สำหรับคนชอบเบสหนัก", "sortOrder": 2 },
+      { "content": "พับเก็บไม่ได้แบน ต้องพกเคส", "sortOrder": 3 }
+    ],
+    "quickVerdict": {
+      "quote": "หูฟัง ANC ที่ดีที่สุด ณ ปี 2025",
+      "description": "Sony WH-1000XM5 ยังคงเป็นตัวเลือกอันดับ 1 สำหรับคนที่ต้องการหูฟังไร้สายตัดเสียงรบกวน เสียงดี สวมสบาย แบตอึด แม้ราคาจะสูง แต่คุ้มค่าทุกบาท"
+    },
+    "quickVerdictTags": [
+      { "tag": "หูฟังไร้สาย", "sortOrder": 1 },
+      { "tag": "ANC", "sortOrder": 2 },
+      { "tag": "Sony", "sortOrder": 3 },
+      { "tag": "Over-ear", "sortOrder": 4 }
+    ],
+    "pricing": {
+      "price": 12990,
+      "currency": "THB",
+      "priceLabel": "฿12,990"
+    }
   }
 }
 

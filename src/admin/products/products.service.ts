@@ -93,7 +93,20 @@ export class ProductsService {
 
     const products = await this.productRepository.find({
       where,
-      relations: ['category', 'ratings', 'brand'],
+      relations: [
+        'category',
+        'brand',
+        'ratings',
+        'keyHighlights',
+        'weaknesses',
+        'beforePurchasePoints',
+        'afterUsagePoints',
+        'pros',
+        'cons',
+        'quickVerdict',
+        'quickVerdictTags',
+        'pricing',
+      ],
     });
     const total = products.length;
     const data = { items: products, total };
@@ -103,7 +116,20 @@ export class ProductsService {
   findOne(id: string) {
     const product = this.productRepository.findOne({
       where: { id },
-      relations: ['category', 'ratings', 'brand'],
+      relations: [
+        'category',
+        'brand',
+        'ratings',
+        'keyHighlights',
+        'weaknesses',
+        'beforePurchasePoints',
+        'afterUsagePoints',
+        'pros',
+        'cons',
+        'quickVerdict',
+        'quickVerdictTags',
+        'pricing',
+      ],
     });
     return product;
   }
@@ -160,7 +186,20 @@ export class ProductsService {
 
       return productRepo.findOne({
         where: { id: id.toString() },
-        relations: ['category', 'ratings', 'brand'],
+        relations: [
+          'category',
+          'brand',
+          'ratings',
+          'keyHighlights',
+          'weaknesses',
+          'beforePurchasePoints',
+          'afterUsagePoints',
+          'pros',
+          'cons',
+          'quickVerdict',
+          'quickVerdictTags',
+          'pricing',
+        ],
       });
     });
   }
