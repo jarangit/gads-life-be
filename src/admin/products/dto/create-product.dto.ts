@@ -14,6 +14,9 @@ import {
   ValidateNested,
 } from 'class-validator';
 import { ProductStatus } from './validate.dto';
+
+// ─── Nested DTOs ────────────────────────────────────────
+
 export class CreateProductRatingDto {
   /** เช่น "ความคุ้มค่า" */
   @IsString()
@@ -27,6 +30,55 @@ export class CreateProductRatingDto {
   score: number;
 }
 
+/** DTO สำหรับ list-item ที่มี content + sortOrder */
+export class CreateSortedContentDto {
+  @IsString()
+  @IsNotEmpty()
+  content: string;
+
+  @IsOptional()
+  @IsInt()
+  @Min(0)
+  sortOrder?: number;
+}
+
+export class CreateQuickVerdictDto {
+  @IsString()
+  @IsNotEmpty()
+  quote: string;
+
+  @IsString()
+  @IsNotEmpty()
+  description: string;
+}
+
+export class CreateQuickVerdictTagDto {
+  @IsString()
+  @IsNotEmpty()
+  tag: string;
+
+  @IsOptional()
+  @IsInt()
+  @Min(0)
+  sortOrder?: number;
+}
+
+export class CreateProductPricingDto {
+  @IsInt()
+  @Min(0)
+  price: number;
+
+  @IsOptional()
+  @IsString()
+  currency?: string;
+
+  @IsString()
+  @IsNotEmpty()
+  priceLabel: string;
+}
+
+// ─── Main DTO ───────────────────────────────────────────
+
 export class CreateProductDto {
   @IsString()
   @IsOptional()
@@ -35,6 +87,7 @@ export class CreateProductDto {
   @IsString()
   @IsOptional()
   brandId?: string | null;
+
   /** ชื่อสินค้า */
   @IsString()
   @IsNotEmpty()
@@ -85,14 +138,77 @@ export class CreateProductDto {
   @IsDateString()
   lastUpdated: string;
 
-  /** ratings[] (optional) */
+  @IsOptional()
+  @IsEnum(ProductStatus)
+  status?: ProductStatus;
+
+  // ─── Relations (all optional) ───
+
+  /** ratings[] */
   @IsOptional()
   @IsArray()
   @ValidateNested({ each: true })
   @Type(() => CreateProductRatingDto)
   ratings?: CreateProductRatingDto[];
 
+  /** จุดเด่น */
   @IsOptional()
-  @IsEnum(ProductStatus)
-  status?: ProductStatus;
+  @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => CreateSortedContentDto)
+  keyHighlights?: CreateSortedContentDto[];
+
+  /** จุดอ่อน */
+  @IsOptional()
+  @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => CreateSortedContentDto)
+  weaknesses?: CreateSortedContentDto[];
+
+  /** สิ่งที่ควรรู้ก่อนซื้อ */
+  @IsOptional()
+  @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => CreateSortedContentDto)
+  beforePurchasePoints?: CreateSortedContentDto[];
+
+  /** ข้อสังเกตหลังใช้งาน */
+  @IsOptional()
+  @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => CreateSortedContentDto)
+  afterUsagePoints?: CreateSortedContentDto[];
+
+  /** ข้อดี */
+  @IsOptional()
+  @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => CreateSortedContentDto)
+  pros?: CreateSortedContentDto[];
+
+  /** ข้อเสีย */
+  @IsOptional()
+  @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => CreateSortedContentDto)
+  cons?: CreateSortedContentDto[];
+
+  /** Quick Verdict (1:1) */
+  @IsOptional()
+  @ValidateNested()
+  @Type(() => CreateQuickVerdictDto)
+  quickVerdict?: CreateQuickVerdictDto;
+
+  /** Quick Verdict Tags */
+  @IsOptional()
+  @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => CreateQuickVerdictTagDto)
+  quickVerdictTags?: CreateQuickVerdictTagDto[];
+
+  /** Pricing (1:1) */
+  @IsOptional()
+  @ValidateNested()
+  @Type(() => CreateProductPricingDto)
+  pricing?: CreateProductPricingDto;
 }

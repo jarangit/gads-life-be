@@ -8,6 +8,7 @@ import { CollectionModule } from './admin/collection/collection.module';
 import { ProductsModule } from './admin/products/products.module';
 import { BrandsModule } from './admin/brands/brands.module';
 import { PublicModule } from './public/public.module';
+import { ProductDetailsModule } from './admin/products/product-details.module';
 
 @Module({
   imports: [
@@ -28,6 +29,7 @@ import { PublicModule } from './public/public.module';
     CategoryModule,
     CollectionModule,
     ProductsModule,
+    ProductDetailsModule,
     BrandsModule,
     PublicModule,
   ],

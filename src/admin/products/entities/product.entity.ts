@@ -5,6 +5,7 @@ import {
   CreateDateColumn,
   JoinColumn,
   OneToMany,
+  OneToOne,
   PrimaryColumn,
   UpdateDateColumn,
   ManyToOne,
@@ -14,6 +15,15 @@ import { nanoid10 } from '../../../utils/nanoid';
 import { Category } from './../../category/entities/category.entity';
 import { ProductStatus } from '../dto/validate.dto';
 import { Brand } from '../../brands/entities/brand.entity';
+import { ProductKeyHighlight } from './product-key-highlight.entity';
+import { ProductWeakness } from './product-weakness.entity';
+import { ProductBeforePurchasePoint } from './product-before-purchase-point.entity';
+import { ProductAfterUsagePoint } from './product-after-usage-point.entity';
+import { ProductPro } from './product-pro.entity';
+import { ProductCon } from './product-con.entity';
+import { ProductQuickVerdict } from './product-quick-verdict.entity';
+import { ProductQuickVerdictTag } from './product-quick-verdict-tag.entity';
+import { ProductPricing } from './product-pricing.entity';
 
 @Entity('products')
 export class Product {
@@ -97,12 +107,41 @@ export class Product {
   @OneToMany(() => ProductRating, (x) => x.product, { cascade: true })
   ratings: ProductRating[];
 
-  // @OneToMany(() => ProductQuickVerdict, (pqv) => pqv.product, {
-  //   cascade: true,
-  //   eager: true,
-  // })
-  // @JoinColumn({ name: 'quick_verdict_id' })
-  // quickVerdict: ProductQuickVerdict;
+  /** key highlights */
+  @OneToMany(() => ProductKeyHighlight, (x) => x.product, { cascade: true })
+  keyHighlights: ProductKeyHighlight[];
+
+  /** weaknesses */
+  @OneToMany(() => ProductWeakness, (x) => x.product, { cascade: true })
+  weaknesses: ProductWeakness[];
+
+  /** before purchase points */
+  @OneToMany(() => ProductBeforePurchasePoint, (x) => x.product, { cascade: true })
+  beforePurchasePoints: ProductBeforePurchasePoint[];
+
+  /** after usage points */
+  @OneToMany(() => ProductAfterUsagePoint, (x) => x.product, { cascade: true })
+  afterUsagePoints: ProductAfterUsagePoint[];
+
+  /** pros */
+  @OneToMany(() => ProductPro, (x) => x.product, { cascade: true })
+  pros: ProductPro[];
+
+  /** cons */
+  @OneToMany(() => ProductCon, (x) => x.product, { cascade: true })
+  cons: ProductCon[];
+
+  /** quick verdict (1:1) */
+  @OneToOne(() => ProductQuickVerdict, (x) => x.product, { cascade: true })
+  quickVerdict: ProductQuickVerdict;
+
+  /** quick verdict tags */
+  @OneToMany(() => ProductQuickVerdictTag, (x) => x.product, { cascade: true })
+  quickVerdictTags: ProductQuickVerdictTag[];
+
+  /** pricing (1:1) */
+  @OneToOne(() => ProductPricing, (x) => x.product, { cascade: true })
+  pricing: ProductPricing;
 
   @Column({
     type: 'varchar',
