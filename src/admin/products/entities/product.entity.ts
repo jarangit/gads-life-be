@@ -12,6 +12,7 @@ import {
 } from 'typeorm';
 import { ProductRating } from './product-rating.entity';
 import { nanoid10 } from '../../../utils/nanoid';
+import { slugify } from '../../../utils/slugify';
 import { Category } from './../../category/entities/category.entity';
 import { ProductStatus } from '../dto/validate.dto';
 import { Brand } from '../../brands/entities/brand.entity';
@@ -33,7 +34,14 @@ export class Product {
   @BeforeInsert()
   generateId() {
     this.id = nanoid10();
+    if (!this.slug && this.name) {
+      this.slug = slugify(this.name);
+    }
   }
+
+  /** URL-friendly slug (auto-generated from name, editable) */
+  @Column({ type: 'varchar', length: 500, unique: true })
+  slug: string;
 
   // categoryId: string; // FK ไป categories.id (ถ้ามีหลายหมวด อาจต้องทำเป็น many-to-many)
   @Column({ type: 'varchar', length: 10, name: 'category_id', nullable: true })

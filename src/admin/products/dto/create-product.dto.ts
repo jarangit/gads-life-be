@@ -88,6 +88,11 @@ export class CreateProductDto {
   @IsOptional()
   brandId?: string | null;
 
+  /** slug (optional — auto-generated from name if omitted) */
+  @IsOptional()
+  @IsString()
+  slug?: string;
+
   /** ชื่อสินค้า */
   @IsString()
   @IsNotEmpty()
