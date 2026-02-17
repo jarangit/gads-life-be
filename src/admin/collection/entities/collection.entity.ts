@@ -1,7 +1,6 @@
 import { Category } from '../../category/entities/category.entity';
 import {
   Entity,
-  PrimaryGeneratedColumn,
   Column,
   Index,
   ManyToOne,
