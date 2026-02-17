@@ -53,7 +53,11 @@ export class HomeService {
       topPicks: topPickProduct,
       lastReview: lastReviewProduct,
       topBrands,
-      sellProducts: sellProducts?.items.map((item) => item.product) || [],
+      sellProducts:
+        sellProducts?.items.map((item) => ({
+          ...item.product,
+          sellPrice: item.dealPrice,
+        })) || [],
     };
   }
 

@@ -6,6 +6,11 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Product } from './entities/product.entity';
 import { ProductRating } from './entities/product-rating.entity';
 import { FindProductQueryDto } from './dto/validate.dto';
+import {
+  buildPaginationOptions,
+  buildPaginationResult,
+  type PaginationResult,
+} from '../../common/dto/pagination-query.dto';
 import { Category } from '../category/entities/category.entity';
 import { Brand } from '../brands/entities/brand.entity';
 
@@ -77,41 +82,48 @@ export class ProductsService {
     });
   }
 
-  async findAll(q: FindProductQueryDto): Promise<{
-    items: Product[];
-    total: number;
-  }> {
-    // Loop through query object และเพิ่มเฉพาะ field ที่มีค่า
+  async findAll(q: FindProductQueryDto): Promise<PaginationResult<Product>> {
+    const { page, limit, skip } = buildPaginationOptions(q);
+
+    // สร้าง where จาก filter fields (ไม่รวม page/limit)
     const where: Record<string, unknown> = {};
+    const paginationKeys = new Set(['page', 'limit']);
     if (q) {
       Object.entries(q).forEach(([key, value]) => {
-        if (value !== undefined && value !== null && value !== '') {
+        if (
+          !paginationKeys.has(key) &&
+          value !== undefined &&
+          value !== null &&
+          value !== ''
+        ) {
           where[key] = value;
         }
       });
     }
 
-    const products = await this.productRepository.find({
+    const [items, total] = await this.productRepository.findAndCount({
       where,
       relations: [
         'category',
         'brand',
-        'ratings',
-        'keyHighlights',
-        'weaknesses',
-        'beforePurchasePoints',
-        'afterUsagePoints',
-        'pros',
-        'cons',
-        'quickVerdict',
-        'quickVerdictTags',
-        'pricing',
-        'finalVerdictPoints',
+        // 'ratings',
+        // 'keyHighlights',
+        // 'weaknesses',
+        // 'beforePurchasePoints',
+        // 'afterUsagePoints',
+        // 'pros',
+        // 'cons',
+        // 'quickVerdict',
+        // 'quickVerdictTags',
+        // 'pricing',
+        // 'finalVerdictPoints',
       ],
+      order: { createdAt: 'DESC' },
+      skip,
+      take: limit,
     });
-    const total = products.length;
-    const data = { items: products, total };
-    return data;
+
+    return buildPaginationResult({ items, total, page, limit });
   }
 
   findOne(id: string) {
