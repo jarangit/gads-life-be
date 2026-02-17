@@ -7,7 +7,10 @@ import {
   IsString,
   MinLength,
 } from 'class-validator';
-import { CollectionType } from '../entities/collection.entity';
+import {
+  CollectionType,
+  CollectionStatus,
+} from '../entities/collection.entity';
 
 export class UpdateCollectionDto extends PartialType(CreateCollectionDto) {
   /**
@@ -56,4 +59,12 @@ export class UpdateCollectionDto extends PartialType(CreateCollectionDto) {
    */
   @IsOptional()
   categoryId?: string;
+
+  /**
+   * สถานะบทความ (optional)
+   * DRAFT | PUBLISHED | ARCHIVED
+   */
+  @IsOptional()
+  @IsEnum(CollectionStatus)
+  status?: CollectionStatus;
 }

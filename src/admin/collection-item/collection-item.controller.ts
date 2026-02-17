@@ -7,7 +7,6 @@ import {
   Param,
   Delete,
   Query,
-  ParseIntPipe,
 } from '@nestjs/common';
 import { CollectionItemService } from './collection-item.service';
 import { CreateCollectionItemDto } from './dto/create-collection-item.dto';
@@ -32,20 +31,20 @@ export class CollectionItemController {
   }
 
   @Get(':id')
-  findOne(@Param('id', ParseIntPipe) id: string) {
+  findOne(@Param('id') id: string) {
     return this.collectionItemService.findOne(id);
   }
 
   @Patch(':id')
   update(
-    @Param('id', ParseIntPipe) id: string,
+    @Param('id') id: string,
     @Body() updateCollectionItemDto: UpdateCollectionItemDto,
   ) {
     return this.collectionItemService.update(id, updateCollectionItemDto);
   }
 
   @Delete(':id')
-  remove(@Param('id', ParseIntPipe) id: string) {
+  remove(@Param('id') id: string) {
     return this.collectionItemService.remove(id);
   }
 }
