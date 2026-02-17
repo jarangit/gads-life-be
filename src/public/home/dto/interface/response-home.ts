@@ -7,4 +7,5 @@ export interface IHomeResponse {
   topPicks?: PublicProductResponse[];
   lastReview?: PublicProductResponse[];
   topBrands?: IBrandResponse[];
+  sellProducts?: PublicProductResponse[];
 }
