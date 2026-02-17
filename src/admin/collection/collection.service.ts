@@ -46,7 +46,10 @@ export class CollectionService {
   }
 
   findOne(id: string) {
-    return `This action returns a #${id} collection`;
+    return this.collectionRepository.findOne({
+      where: { id },
+      relations: ['category', 'items', 'items.product'],
+    });
   }
 
   async update(id: string, updateCollectionDto: UpdateCollectionDto) {
