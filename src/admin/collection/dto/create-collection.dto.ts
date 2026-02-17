@@ -47,6 +47,6 @@ export class CreateCollectionDto {
   /**
    * หมวดหลัก (optional)
    */
-  @IsNotEmpty()
+  @IsOptional()
   categoryId?: string;
 }

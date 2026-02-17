@@ -1,0 +1,19 @@
+meta {
+  name: list
+  type: http
+  seq: 2
+}
+
+get {
+  url: {{local}}/admin/collection-item
+  body: none
+  auth: inherit
+}
+
+headers {
+  X-ADMIN-KEY: {{api-key}}
+}
+
+settings {
+  encodeUrl: true
+}

@@ -9,8 +9,10 @@ import {
   UpdateDateColumn,
   BeforeInsert,
   PrimaryColumn,
+  OneToMany,
 } from 'typeorm';
 import { nanoid10 } from '../../../utils/nanoid';
+import { CollectionItem } from '../../collection-item/entities/collection-item.entity';
 
 /**
  * ประเภทของบทความ
@@ -180,4 +182,11 @@ export class Collection {
    */
   @UpdateDateColumn({ type: 'datetime', name: 'updated_at' })
   updatedAt: Date;
+
+  // -------------------------
+  // Relations
+  // -------------------------
+
+  @OneToMany(() => CollectionItem, (item) => item.collection)
+  items: CollectionItem[];
 }
