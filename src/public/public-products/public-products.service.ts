@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { FindOptionsOrder, FindOptionsWhere, Repository } from 'typeorm';
+import { Repository, SelectQueryBuilder } from 'typeorm';
 import { Product } from '../../admin/products/entities/product.entity';
 import { ProductStatus } from '../../admin/products/dto/validate.dto';
 import { ProductKeyHighlight } from '../../admin/products/entities/product-key-highlight.entity';
@@ -68,39 +68,34 @@ export class PublicProductsService {
   ): Promise<PaginationResult<PublicProductResponse>> {
     const { page, limit, skip } = buildPaginationOptions(query);
 
-    const where: FindOptionsWhere<Product> = {
-      status: ProductStatus.PUBLISHED,
-    };
+    const qb = this.productRepository
+      .createQueryBuilder('product')
+      .leftJoinAndSelect('product.category', 'category')
+      .leftJoinAndSelect('product.brand', 'brand')
+      .leftJoinAndSelect('product.ratings', 'ratings')
+      .where('product.status = :status', { status: ProductStatus.PUBLISHED });
+
+    if (query.search) {
+      const searchTerm = `%${query.search.trim()}%`;
+      qb.andWhere(
+        '(product.name LIKE :search OR product.subtitle LIKE :search)',
+        { search: searchTerm },
+      );
+    }
 
     if (query.categoryId) {
-      where.categoryId = query.categoryId;
+      qb.andWhere('product.categoryId = :categoryId', {
+        categoryId: query.categoryId,
+      });
     }
 
     if (query.brandId) {
-      where.brandId = query.brandId;
+      qb.andWhere('product.brandId = :brandId', { brandId: query.brandId });
     }
 
-    const [items, total] = await this.productRepository.findAndCount({
-      where,
-      relations: [
-        'category',
-        'brand',
-        'ratings',
-        // 'keyHighlights',
-        // 'weaknesses',
-        // 'beforePurchasePoints',
-        // 'afterUsagePoints',
-        // 'pros',
-        // 'cons',
-        // 'quickVerdict',
-        // 'quickVerdictTags',
-        // 'pricing',
-        // 'finalVerdictPoints',
-      ],
-      order: this.resolveSort(query.sort),
-      skip,
-      take: limit,
-    });
+    this.applySort(qb, query.sort);
+
+    const [items, total] = await qb.skip(skip).take(limit).getManyAndCount();
 
     return buildPaginationResult({
       items: items.map((item) => this.toPublicProduct(item)),
@@ -168,17 +163,33 @@ export class PublicProductsService {
     return this.toPublicProduct(product);
   }
 
-  private resolveSort(sort?: PublicProductSort): FindOptionsOrder<Product> {
+  private applySort(
+    qb: SelectQueryBuilder<Product>,
+    sort?: PublicProductSort,
+  ): void {
     switch (sort) {
       case 'priceAsc':
-        return { price: 'ASC', createdAt: 'DESC' };
+        qb.orderBy('product.price', 'ASC').addOrderBy(
+          'product.createdAt',
+          'DESC',
+        );
+        break;
       case 'priceDesc':
-        return { price: 'DESC', createdAt: 'DESC' };
+        qb.orderBy('product.price', 'DESC').addOrderBy(
+          'product.createdAt',
+          'DESC',
+        );
+        break;
       case 'scoreDesc':
-        return { overallScore: 'DESC', createdAt: 'DESC' };
+        qb.orderBy('product.overallScore', 'DESC').addOrderBy(
+          'product.createdAt',
+          'DESC',
+        );
+        break;
       case 'latest':
       default:
-        return { createdAt: 'DESC' };
+        qb.orderBy('product.createdAt', 'DESC');
+        break;
     }
   }
 
