@@ -24,8 +24,8 @@ export class CreateProductRatingDto {
   @IsNotEmpty()
   subCategory: string;
 
-  /** คะแนน 1-5 */
-  @IsInt()
+  /** คะแนน 1.0-5 */
+  @IsNumber()
   @Min(1)
   @Max(5)
   score: number;

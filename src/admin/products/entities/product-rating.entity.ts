@@ -26,7 +26,7 @@ export class ProductRating {
   subCategory: string;
 
   /** 1-5 */
-  @Column({ type: 'int' })
+  @Column({ type: 'decimal', precision: 3, scale: 1 })
   score: number;
 
   @ManyToOne(() => Product, (p) => p.ratings, { onDelete: 'CASCADE' })

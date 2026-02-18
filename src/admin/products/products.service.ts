@@ -192,7 +192,7 @@ export class ProductsService {
           ratingRepo.create({
             productId: id,
             subCategory: r.subCategory,
-            score: r.score,
+            score: Number(r.score),
           }),
         );
         await ratingRepo.save(ratings);
