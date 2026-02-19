@@ -1,4 +1,7 @@
-import { CollectionStatus, CollectionType } from '../../../admin/collection/entities/collection.entity';
+import {
+  CollectionStatus,
+  CollectionType,
+} from '../../../admin/collection/entities/collection.entity';
 import { PublicCollectionItemResponse } from './public-collection-item.type';
 
 export type PublicCollectionResponse = {
@@ -10,7 +13,7 @@ export type PublicCollectionResponse = {
   excerpt: string | null;
   coverImage: string | null;
   categoryId: string | null;
-  category: {
+  category?: {
     id: string;
     slug: string;
     nameTh: string;
@@ -22,3 +25,11 @@ export type PublicCollectionResponse = {
   updatedAt: Date;
   items: PublicCollectionItemResponse[];
 };
+
+export interface IQueryCollection {
+  page?: number;
+  limit?: number;
+  categoryId?: string;
+  brandId?: string;
+  search?: string;
+}

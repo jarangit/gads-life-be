@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { LessThanOrEqual, Repository } from 'typeorm';
+import { Repository } from 'typeorm';
 import {
   Collection,
   CollectionStatus,
@@ -16,12 +16,16 @@ import type { PublicCollectionItemResponse } from './types/public-collection-ite
 import type { PublicCollectionProductResponse } from './types/public-collection-product.type';
 import { CollectionItem } from '../../admin/collection-item/entities/collection-item.entity';
 import { Product } from '../../admin/products/entities/product.entity';
+import { QueryCollection } from './dto/collection.query.dto';
 
 @Injectable()
 export class PublicCollectionsService {
   constructor(
     @InjectRepository(Collection)
     private readonly collectionRepository: Repository<Collection>,
+
+    @InjectRepository(Product)
+    private readonly productRepository: Repository<Product>,
   ) {}
 
   async findAll(
@@ -72,23 +76,60 @@ export class PublicCollectionsService {
     });
   }
 
-  async findOne(slug: string): Promise<PublicCollectionResponse> {
-    const collection = await this.collectionRepository.findOne({
-      where: {
-        slug,
-        status: CollectionStatus.PUBLISHED,
-        publishedAt: LessThanOrEqual(new Date()),
-      },
-      relations: ['category'],
-    });
+  async findOne({
+    slug,
+    q,
+  }: {
+    slug: string;
+    q: QueryCollection;
+  }): Promise<PublicCollectionResponse> {
+    const { categoryId, brandId, search } = q;
 
-    if (!collection) {
+    const { page, limit } = buildPaginationOptions(q);
+
+    const ci = await this.collectionRepository
+      .createQueryBuilder('collection')
+      .leftJoinAndSelect('collection.items', 'items')
+      .leftJoinAndSelect('items.product', 'product')
+      .where('collection.slug = :slug', { slug })
+      .andWhere('collection.status = :status', {
+        status: CollectionStatus.PUBLISHED,
+      })
+      .andWhere((qb) => {
+        const subQuery = qb
+          .subQuery()
+          .select('ci.id')
+          .from(CollectionItem, 'ci')
+          .leftJoin('ci.product', 'p')
+          .where('ci.collectionId = collection.id');
+
+        if (search) {
+          subQuery.andWhere(
+            '(p.name LIKE :search OR p.subtitle LIKE :search)',
+            { search: `%${search.trim()}%` },
+          );
+        }
+
+        if (categoryId) {
+          subQuery.andWhere('p.categoryId = :categoryId', { categoryId });
+        }
+
+        if (brandId) {
+          subQuery.andWhere('p.brandId = :brandId', { brandId });
+        }
+
+        return 'items.id IN ' + subQuery.getQuery();
+      })
+      .skip((page - 1) * limit)
+      .take(limit)
+      .getOne();
+    if (!ci) {
       throw new NotFoundException(
         `Published collection with slug "${slug}" not found`,
       );
     }
 
-    return this.toPublicCollection(collection);
+    return this.toPublicCollection(ci);
   }
 
   private toPublicCollection(collection: Collection): PublicCollectionResponse {

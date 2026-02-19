@@ -16,4 +16,5 @@ export class FindProductQueryDto extends PaginationQueryDto {
 
   @IsOptional()
   brandId?: string;
+
 }
