@@ -1,8 +1,8 @@
 import 'reflect-metadata';
 import 'dotenv/config';
-import { AppDataSource } from '../src/database/data-source';
-import { Product } from '../src/admin/products/entities/product.entity';
-import { ProductStatus } from '../src/admin/products/dto/validate.dto';
+import { AppDataSource } from '../database/data-source';
+import { Product } from '../admin/products/entities/product.entity';
+import { ProductStatus } from '../admin/products/dto/validate.dto';
 import { customAlphabet } from 'nanoid';
 
 const nanoid10 = customAlphabet(
