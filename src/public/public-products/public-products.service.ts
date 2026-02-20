@@ -193,6 +193,7 @@ export class PublicProductsService {
   }
 
   private toPublicProduct(product: Product): PublicProductResponse {
+
     return {
       ...product,
       // id: product.id,

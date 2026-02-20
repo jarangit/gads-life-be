@@ -31,6 +31,7 @@ async function bootstrap() {
         'http://localhost:3000', // dev web
         'http://localhost:5173', // vite
         'https://yourdomain.com', // prod web
+        'https://gads-life-cms-y56m.vercel.app/', // prod cms
       ],
       methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
       allowedHeaders: ['Content-Type', 'Authorization', 'X-ADMIN-KEY'],
