@@ -72,7 +72,6 @@ export class PublicProductsService {
       .createQueryBuilder('product')
       .leftJoinAndSelect('product.category', 'category')
       .leftJoinAndSelect('product.brand', 'brand')
-      .leftJoinAndSelect('product.ratings', 'ratings')
       .where('product.status = :status', { status: ProductStatus.PUBLISHED });
 
     if (query.search) {
