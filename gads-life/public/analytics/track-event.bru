@@ -1,0 +1,25 @@
+meta {
+  name: track-event
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{local}}/public/analytics/events
+  body: json
+  auth: inherit
+}
+
+json {
+  "eventType": "page_view",
+  "path": "/products/macbook-air-m3-15",
+  "referrer": "https://google.com",
+  "productId": "{{publicProductId}}",
+  "productSlug": "macbook-air-m3-15",
+  "visitorId": "{{visitorId}}"
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

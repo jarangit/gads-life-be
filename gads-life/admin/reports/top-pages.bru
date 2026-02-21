@@ -1,0 +1,26 @@
+meta {
+  name: top-pages
+  type: http
+  seq: 3
+}
+
+get {
+  url: {{local}}/admin/reports/top-pages
+  body: none
+  auth: inherit
+}
+
+params:query {
+  ~from: {{reportFrom}}
+  ~to: {{reportTo}}
+  ~limit: {{reportLimit}}
+}
+
+headers {
+  X-ADMIN-KEY: {{api-key}}
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

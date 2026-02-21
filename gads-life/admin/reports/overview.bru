@@ -1,0 +1,25 @@
+meta {
+  name: overview
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{local}}/admin/reports/overview
+  body: none
+  auth: inherit
+}
+
+params:query {
+  ~from: {{reportFrom}}
+  ~to: {{reportTo}}
+}
+
+headers {
+  X-ADMIN-KEY: {{api-key}}
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}
