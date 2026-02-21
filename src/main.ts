@@ -28,7 +28,7 @@ async function bootstrap() {
     const port = process.env.PORT ?? 3001;
     app.enableCors({
       origin: [
-        'http://localhost:3000', // dev web
+        'http://localhost:3000', 
         'http://localhost:5173', // vite
         'https://yourdomain.com', // prod web
       ],
