@@ -4,6 +4,9 @@ import { Logger, ValidationPipe } from '@nestjs/common';
 import { ResponseInterceptor } from './common/interceptor/response.interceptor';
 
 async function bootstrap() {
+  const allowList = process.env.CORS_ORIGINS
+    ? process.env.CORS_ORIGINS.split(',').map((origin) => origin.trim())
+    : [];
   const logger = new Logger('Bootstrap');
   logger.log('Starting application...');
 
@@ -27,12 +30,7 @@ async function bootstrap() {
 
     const port = process.env.PORT ?? 3001;
     app.enableCors({
-      origin: [
-        'http://localhost:3000', // dev web
-        'http://localhost:5173', // vite
-        'https://yourdomain.com', // prod web
-        'https://gads-life-cms-y56m.vercel.app', // prod cms
-      ],
+      origin: allowList.length > 0 ? allowList : '*',
       methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
       allowedHeaders: ['Content-Type', 'Authorization', 'X-ADMIN-KEY'],
       credentials: true, // ถ้าใช้ cookie / session
