@@ -4,6 +4,7 @@ import { PublicCategoriesModule } from './public-categories/public-categories.mo
 import { PublicBrandsModule } from './public-brands/public-brands.module';
 import { PublicCollectionsModule } from './public-collections/public-collections.module';
 import { HomeModule } from './home/home.module';
+import { AnalyticsModule } from './analytics/analytics.module';
 
 @Module({
   imports: [
@@ -12,6 +13,7 @@ import { HomeModule } from './home/home.module';
     PublicBrandsModule,
     PublicCollectionsModule,
     HomeModule,
+    AnalyticsModule,
   ],
 })
 export class PublicModule {}

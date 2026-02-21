@@ -10,6 +10,7 @@ import { BrandsModule } from './admin/brands/brands.module';
 import { PublicModule } from './public/public.module';
 import { ProductDetailsModule } from './admin/products/product-details.module';
 import { CollectionItemModule } from './admin/collection-item/collection-item.module';
+import { ReportsModule } from './admin/reports/reports.module';
 
 @Module({
   imports: [
@@ -37,6 +38,7 @@ import { CollectionItemModule } from './admin/collection-item/collection-item.mo
     BrandsModule,
     PublicModule,
     CollectionItemModule,
+    ReportsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
