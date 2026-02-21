@@ -144,6 +144,7 @@ export class ProductsService {
         'pricing',
         'finalVerdictPoints',
       ],
+      relationLoadStrategy: 'query',
     });
     return product;
   }

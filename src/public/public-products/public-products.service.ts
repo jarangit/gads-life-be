@@ -55,7 +55,21 @@ export type PublicProductResponse = {
   createdAt: Date;
   updatedAt: Date;
 };
-
+const PRODUCT_DETAIL_RELATIONS = [
+  'category',
+  'brand',
+  'ratings',
+  'keyHighlights',
+  'weaknesses',
+  'beforePurchasePoints',
+  'afterUsagePoints',
+  'pros',
+  'cons',
+  'quickVerdict',
+  'quickVerdictTags',
+  'pricing',
+  'finalVerdictPoints',
+] as const;
 @Injectable()
 export class PublicProductsService {
   constructor(
@@ -107,21 +121,8 @@ export class PublicProductsService {
   async findOne(id: string): Promise<PublicProductResponse> {
     const product = await this.productRepository.findOne({
       where: { id, status: ProductStatus.PUBLISHED },
-      relations: [
-        'category',
-        'brand',
-        'ratings',
-        'keyHighlights',
-        'weaknesses',
-        'beforePurchasePoints',
-        'afterUsagePoints',
-        'pros',
-        'cons',
-        'quickVerdict',
-        'quickVerdictTags',
-        'pricing',
-        'finalVerdictPoints',
-      ],
+      relations: PRODUCT_DETAIL_RELATIONS as unknown as string[],
+      relationLoadStrategy: 'query',
     });
 
     if (!product) {
@@ -151,6 +152,7 @@ export class PublicProductsService {
         'pricing',
         'finalVerdictPoints',
       ],
+      relationLoadStrategy: 'query',
     });
 
     if (!product) {
@@ -193,7 +195,6 @@ export class PublicProductsService {
   }
 
   private toPublicProduct(product: Product): PublicProductResponse {
-
     return {
       ...product,
       // id: product.id,
