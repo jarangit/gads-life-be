@@ -25,7 +25,7 @@ export function toCategoryResponse(category: Category): CategoryResponse {
 export function toItem(product: Product): Item {
   return {
     id: product.id,
-    slug: product.name.toLowerCase().replace(/\s+/g, '-'),
+    slug: product?.slug ?? '',
     name: product.name,
     image: product.image ?? null,
     overallScore: Number(product.overallScore),

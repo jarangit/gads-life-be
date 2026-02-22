@@ -155,7 +155,9 @@ export class Product {
   pricing: ProductPricing;
 
   /** final verdict points (buy_if / skip_if) */
-  @OneToMany(() => ProductFinalVerdictPoint, (x) => x.product, { cascade: true })
+  @OneToMany(() => ProductFinalVerdictPoint, (x) => x.product, {
+    cascade: true,
+  })
   finalVerdictPoints: ProductFinalVerdictPoint[];
 
   @Column({

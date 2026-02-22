@@ -2,9 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Category } from '../../admin/category/entities/category.entity';
-import {
-  buildPaginationOptions,
-} from '../../common/dto/pagination-query.dto';
+import { buildPaginationOptions } from '../../common/dto/pagination-query.dto';
 import { FindPublicCategoriesDto } from './dto/find-public-categories.dto';
 import { Product } from '../../admin/products/entities/product.entity';
 import { ProductStatus } from '../../admin/products/dto/validate.dto';
