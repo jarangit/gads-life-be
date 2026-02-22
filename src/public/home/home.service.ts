@@ -57,6 +57,7 @@ export class HomeService {
     const quickVerdictProducts = await this.productRepository
       .createQueryBuilder('product')
       .innerJoinAndSelect('product.quickVerdict', 'quickVerdict')
+      .leftJoinAndSelect('product.category', 'category')
       .where('product.status = :status', { status: ProductStatus.PUBLISHED })
       .orderBy('RAND()')
       .take(5)
@@ -78,6 +79,7 @@ export class HomeService {
           slug: p.slug ?? null,
           name: p.name,
           quickVerdict: p.quickVerdict.quote,
+          categoryName: p.category ? p.category.nameTh : null,
         }),
       ),
     };

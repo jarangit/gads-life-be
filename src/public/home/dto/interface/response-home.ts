@@ -7,6 +7,7 @@ export interface IQuickVerdictProductItem {
   slug?: string | null;
   name: string;
   quickVerdict: string;
+  categoryName: string | null;
 }
 
 export interface IHomeResponse {
