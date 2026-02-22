@@ -37,7 +37,10 @@ export class ReportsService {
 
     const uniqueVisitors = await this.analyticsRepository
       .createQueryBuilder('event')
-      .select('COUNT(DISTINCT COALESCE(event.visitorId, event.ipHash))', 'count')
+      .select(
+        'COUNT(DISTINCT COALESCE(event.visitorId, event.ipHash))',
+        'count',
+      )
       .where('event.createdAt BETWEEN :from AND :to', { from, to })
       .getRawOne<{ count: string }>();
 

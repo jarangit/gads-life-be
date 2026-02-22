@@ -1,13 +1,17 @@
 import { Injectable } from '@nestjs/common';
 import { CreateHomeDto } from './dto/create-home.dto';
 import { UpdateHomeDto } from './dto/update-home.dto';
-import { IHomeResponse } from './dto/interface/response-home';
+import {
+  IHomeResponse,
+  IQuickVerdictProductItem,
+} from './dto/interface/response-home';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Category } from '../../admin/category/entities/category.entity';
 import { Repository } from 'typeorm';
 import { Product } from '../../admin/products/entities/product.entity';
 import { Brand } from '../../admin/brands/entities/brand.entity';
 import { Collection } from '../../admin/collection/entities/collection.entity';
+import { ProductStatus } from '../../admin/products/dto/validate.dto';
 
 @Injectable()
 export class HomeService {
@@ -48,6 +52,16 @@ export class HomeService {
       where: { slug: 'shop-special-price' },
       relations: ['items', 'items.product'],
     });
+
+    // fetch random products that have quickVerdict (for "what is this product" section)
+    const quickVerdictProducts = await this.productRepository
+      .createQueryBuilder('product')
+      .innerJoinAndSelect('product.quickVerdict', 'quickVerdict')
+      .where('product.status = :status', { status: ProductStatus.PUBLISHED })
+      .orderBy('RAND()')
+      .take(5)
+      .getMany();
+
     return {
       categories,
       topPicks: topPickProduct,
@@ -58,6 +72,14 @@ export class HomeService {
           ...item.product,
           sellPrice: item.dealPrice,
         })) || [],
+      quickVerdictProducts: quickVerdictProducts.map(
+        (p): IQuickVerdictProductItem => ({
+          id: p.id,
+          slug: p.slug ?? null,
+          name: p.name,
+          quickVerdict: p.quickVerdict.quote,
+        }),
+      ),
     };
   }
 
