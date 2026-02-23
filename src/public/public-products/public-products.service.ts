@@ -86,6 +86,7 @@ export class PublicProductsService {
       .createQueryBuilder('product')
       .leftJoinAndSelect('product.category', 'category')
       .leftJoinAndSelect('product.brand', 'brand')
+      .leftJoinAndSelect('product.quickVerdict', 'quickVerdict')
       .where('product.status = :status', { status: ProductStatus.PUBLISHED });
 
     if (query.search) {
