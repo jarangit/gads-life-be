@@ -10,6 +10,17 @@ export interface IQuickVerdictProductItem {
   categoryName: string | null;
 }
 
+export interface IFeaturedArticleItem {
+  id: string;
+  slug: string;
+  title: string;
+  excerpt?: string | null;
+  heroImage?: string | null;
+  heroImageAlt?: string | null;
+  type: string;
+  publishedAt?: Date | null;
+}
+
 export interface IHomeResponse {
   categories: Category[];
   topPicks?: PublicProductResponse[];
@@ -17,4 +28,5 @@ export interface IHomeResponse {
   topBrands?: IBrandResponse[];
   sellProducts?: PublicProductResponse[];
   quickVerdictProducts?: IQuickVerdictProductItem[];
+  featuredArticles?: IFeaturedArticleItem[];
 }

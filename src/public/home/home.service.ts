@@ -12,6 +12,11 @@ import { Product } from '../../admin/products/entities/product.entity';
 import { Brand } from '../../admin/brands/entities/brand.entity';
 import { Collection } from '../../admin/collection/entities/collection.entity';
 import { ProductStatus } from '../../admin/products/dto/validate.dto';
+import {
+  ContentArticle,
+  ContentStatus,
+} from '../../admin/content-articles/entities/content-article.entity';
+import { IFeaturedArticleItem } from './dto/interface/response-home';
 
 @Injectable()
 export class HomeService {
@@ -27,6 +32,9 @@ export class HomeService {
 
     @InjectRepository(Collection)
     private collectionRepository: Repository<Collection>,
+
+    @InjectRepository(ContentArticle)
+    private contentArticleRepository: Repository<ContentArticle>,
   ) {}
   create(createHomeDto: CreateHomeDto) {
     return 'This action adds a new home';
@@ -63,6 +71,13 @@ export class HomeService {
       .take(5)
       .getMany();
 
+    const featuredArticles = await this.contentArticleRepository.find({
+      where: { isFeatured: 1, status: ContentStatus.PUBLISHED },
+      order: { publishedAt: 'DESC' },
+      take: 5,
+      select: ['id', 'slug', 'title', 'excerpt', 'heroImage', 'heroImageAlt', 'type', 'publishedAt'],
+    });
+
     return {
       categories,
       topPicks: topPickProduct,
@@ -80,6 +95,18 @@ export class HomeService {
           name: p.name,
           quickVerdict: p.quickVerdict.quote,
           categoryName: p.category ? p.category.nameTh : null,
+        }),
+      ),
+      featuredArticles: featuredArticles.map(
+        (a): IFeaturedArticleItem => ({
+          id: a.id,
+          slug: a.slug,
+          title: a.title,
+          excerpt: a.excerpt ?? null,
+          heroImage: a.heroImage ?? null,
+          heroImageAlt: a.heroImageAlt ?? null,
+          type: a.type,
+          publishedAt: a.publishedAt ?? null,
         }),
       ),
     };
