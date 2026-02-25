@@ -2,6 +2,7 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  Index,
   JoinColumn,
   ManyToOne,
   PrimaryGeneratedColumn,
@@ -10,6 +11,9 @@ import {
 import { ContentArticle } from './content-article.entity';
 
 @Entity('content_tags')
+@Index('ux_content_tags_article_value', ['articleId', 'value'], {
+  unique: true,
+})
 export class ContentTag {
   @PrimaryGeneratedColumn()
   id: number;

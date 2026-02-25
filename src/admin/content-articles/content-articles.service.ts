@@ -49,6 +49,7 @@ export class ContentArticlesService {
       const tagRepo = manager.getRepository(ContentTag);
 
       const { sections, tags, ...articleData } = dto;
+      const normalizedTags = this.normalizeTagValues(tags);
 
       const article = articleRepo.create({
         ...articleData,
@@ -68,21 +69,17 @@ export class ContentArticlesService {
         await sectionRepo.save(toSave);
       }
 
-      if (tags?.length) {
-        const toSave = tags.map((tag) =>
-          tagRepo.create({
-            ...tag,
-            articleId: article.id,
-          }),
-        );
-        await tagRepo.save(toSave);
+      if (normalizedTags.length) {
+        await this.syncArticleTags(tagRepo, article.id, normalizedTags);
       }
 
-      return articleRepo.findOne({
+      const savedArticle = await articleRepo.findOne({
         where: { id: article.id },
         relations: ['sections', 'tags'],
         relationLoadStrategy: 'query',
       });
+
+      return savedArticle ? this.withUniqueTags(savedArticle) : savedArticle;
     });
   }
 
@@ -107,7 +104,12 @@ export class ContentArticlesService {
       take: limit,
     });
 
-    return buildPaginationResult({ items, total, page, limit });
+    return buildPaginationResult({
+      items: items.map((item) => this.withUniqueTags(item)),
+      total,
+      page,
+      limit,
+    });
   }
 
   async findOne(id: number) {
@@ -121,7 +123,7 @@ export class ContentArticlesService {
       throw new NotFoundException('Article not found');
     }
 
-    return article;
+    return this.withUniqueTags(article);
   }
 
   async update(id: number, dto: UpdateContentArticleDto) {
@@ -147,12 +149,13 @@ export class ContentArticlesService {
       const tagRepo = manager.getRepository(ContentTag);
 
       const { sections, tags, ...articleData } = dto;
+      const normalizedTags = this.normalizeTagValues(tags);
 
       let publishedAt = existing.publishedAt;
       if (dto.publishedAt === null) {
         publishedAt = null;
       } else if (dto.publishedAt) {
-        publishedAt = new Date(dto.publishedAt as any);
+        publishedAt = new Date(dto.publishedAt);
       }
 
       await articleRepo.update(id, {
@@ -174,23 +177,16 @@ export class ContentArticlesService {
       }
 
       if (tags !== undefined) {
-        await tagRepo.delete({ articleId: id });
-        if (tags.length) {
-          const toSave = tags.map((tag) =>
-            tagRepo.create({
-              ...tag,
-              articleId: id,
-            }),
-          );
-          await tagRepo.save(toSave);
-        }
+        await this.syncArticleTags(tagRepo, id, normalizedTags);
       }
 
-      return articleRepo.findOne({
+      const savedArticle = await articleRepo.findOne({
         where: { id },
         relations: ['sections', 'tags'],
         relationLoadStrategy: 'query',
       });
+
+      return savedArticle ? this.withUniqueTags(savedArticle) : savedArticle;
     });
   }
 
@@ -204,5 +200,140 @@ export class ContentArticlesService {
 
     await this.articleRepository.delete(id);
     return { success: true };
+  }
+
+  async removeTag(articleId: number, tagId: number) {
+    const article = await this.articleRepository.findOne({
+      where: { id: articleId },
+    });
+    if (!article) {
+      throw new NotFoundException('Article not found');
+    }
+
+    const tag = await this.tagRepository.findOne({
+      where: { id: tagId, articleId },
+    });
+    if (!tag) {
+      throw new NotFoundException('Tag not found for this article');
+    }
+
+    await this.tagRepository.delete(tagId);
+
+    return { success: true };
+  }
+
+  private normalizeTagValues(tags?: { value: string }[]): string[] {
+    if (!tags?.length) {
+      return [];
+    }
+
+    const seen = new Set<string>();
+    const values: string[] = [];
+
+    for (const tag of tags) {
+      const normalizedValue = this.normalizeTagValue(tag.value);
+      if (!normalizedValue) {
+        continue;
+      }
+
+      const dedupeKey = normalizedValue.toLowerCase();
+      if (seen.has(dedupeKey)) {
+        continue;
+      }
+
+      seen.add(dedupeKey);
+      values.push(normalizedValue);
+    }
+
+    return values;
+  }
+
+  private async syncArticleTags(
+    tagRepo: Repository<ContentTag>,
+    articleId: number,
+    requestedValues: string[],
+  ): Promise<void> {
+    const existingTags = await tagRepo.find({
+      where: { articleId },
+    });
+
+    const existingByKey = new Map<string, ContentTag>();
+    const duplicateExistingIds: number[] = [];
+    const toNormalizeUpdate: ContentTag[] = [];
+
+    for (const tag of existingTags) {
+      const key = this.normalizeTagValue(tag.value);
+
+      if (!key) {
+        duplicateExistingIds.push(tag.id);
+        continue;
+      }
+
+      if (tag.value !== key) {
+        tag.value = key;
+        toNormalizeUpdate.push(tag);
+      }
+
+      if (!existingByKey.has(key)) {
+        existingByKey.set(key, tag);
+      } else {
+        duplicateExistingIds.push(tag.id);
+      }
+    }
+
+    const requestedKeys = new Set(requestedValues.map((value) => value));
+
+    const toCreate = requestedValues
+      .filter((value) => !existingByKey.has(value))
+      .map((value) =>
+        tagRepo.create({
+          articleId,
+          value,
+        }),
+      );
+
+    const toDeleteIds = existingTags
+      .filter((tag) => !requestedKeys.has(this.normalizeTagValue(tag.value)))
+      .map((tag) => tag.id);
+
+    const allDeleteIds = Array.from(
+      new Set([...toDeleteIds, ...duplicateExistingIds]),
+    );
+
+    if (toNormalizeUpdate.length) {
+      await tagRepo.save(toNormalizeUpdate);
+    }
+
+    if (toCreate.length) {
+      await tagRepo.save(toCreate);
+    }
+
+    if (allDeleteIds.length) {
+      await tagRepo.delete(allDeleteIds);
+    }
+  }
+
+  private withUniqueTags(article: ContentArticle): ContentArticle {
+    if (!article.tags?.length) {
+      return article;
+    }
+
+    const seen = new Set<string>();
+    article.tags = article.tags.filter((tag) => {
+      const key = this.normalizeTagValue(tag.value);
+      if (!key || seen.has(key)) {
+        return false;
+      }
+
+      seen.add(key);
+      tag.value = key;
+      return true;
+    });
+
+    return article;
+  }
+
+  private normalizeTagValue(value: string): string {
+    return value.trim().replace(/\s+/g, ' ').toLowerCase();
   }
 }

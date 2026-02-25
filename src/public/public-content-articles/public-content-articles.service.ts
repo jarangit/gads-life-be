@@ -217,8 +217,21 @@ export class PublicContentArticlesService {
     });
 
     return tags.reduce<Record<number, string[]>>((acc, tag) => {
-      acc[tag.articleId] = acc[tag.articleId] || [];
-      acc[tag.articleId].push(tag.value);
+      const normalizedValue = tag.value.trim();
+      if (!normalizedValue) {
+        return acc;
+      }
+
+      const currentTags = acc[tag.articleId] ?? [];
+      const hasTag = currentTags.some(
+        (value) => value.toLowerCase() === normalizedValue.toLowerCase(),
+      );
+
+      if (!hasTag) {
+        currentTags.push(normalizedValue);
+      }
+
+      acc[tag.articleId] = currentTags;
       return acc;
     }, {});
   }

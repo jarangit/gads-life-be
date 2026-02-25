@@ -47,4 +47,12 @@ export class ContentArticlesController {
   remove(@Param('id', ParseIntPipe) id: number) {
     return this.contentArticlesService.remove(id);
   }
+
+  @Delete(':id/tags/:tagId')
+  removeTag(
+    @Param('id', ParseIntPipe) id: number,
+    @Param('tagId', ParseIntPipe) tagId: number,
+  ) {
+    return this.contentArticlesService.removeTag(id, tagId);
+  }
 }
