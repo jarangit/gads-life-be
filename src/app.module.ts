@@ -11,6 +11,7 @@ import { PublicModule } from './public/public.module';
 import { ProductDetailsModule } from './admin/products/product-details.module';
 import { CollectionItemModule } from './admin/collection-item/collection-item.module';
 import { ReportsModule } from './admin/reports/reports.module';
+import { ContentArticlesModule } from './admin/content-articles/content-articles.module';
 
 @Module({
   imports: [
@@ -39,6 +40,7 @@ import { ReportsModule } from './admin/reports/reports.module';
     PublicModule,
     CollectionItemModule,
     ReportsModule,
+    ContentArticlesModule,
   ],
   controllers: [AppController],
   providers: [AppService],

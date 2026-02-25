@@ -1,0 +1,62 @@
+meta {
+  name: create
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{local}}/admin/content-articles
+  body: json
+  auth: inherit
+}
+
+headers {
+  X-ADMIN-KEY: {{api-key}}
+  Content-Type: application/json
+}
+
+body:json {
+  {
+    "slug": "apple-glasses-2026-rumor-1",
+    "title": "Apple Glasses อาจมาในปี 2026 — แต่ไม่ใช่แบบที่คุณจินตนาการไว้",
+    "summary": "Apple อาจเปิดตัวแว่นอัจฉริยะในปี 2026 แต่รุ่นแรกอาจยังไม่ใช่ AR เต็มรูปแบบอย่างที่หลายคนคาดหวัง",
+    "excerpt": "มีรายงานว่า Apple เร่งพัฒนาแว่นอัจฉริยะ และอาจเปิดตัวเร็วสุดปี 2026 แต่รุ่นแรกอาจทำงานคล้าย Meta Ray-Ban มากกว่าการเป็น AR เต็มตัว",
+    "type": "NEWS",
+    "status": "PUBLISHED",
+    "publishedAt": "2026-02-24T23:00:00.000Z",
+    "isFeatured": 1,
+    "metaTitle": "Apple Glasses 2026 ข่าวลือล่าสุด ควรรอไหม?",
+    "metaDescription": "Apple อาจเปิดตัว Apple Glasses ในปี 2026 แต่รุ่นแรกอาจยังไม่ใช่ AR เต็มรูปแบบ ดูรายละเอียดและผลต่อการตัดสินใจซื้อที่นี่",
+    "heroImage": "/images/news/apple-glasses-2026.jpg",
+    "heroImageAlt": "Concept Apple Glasses wearable device 2026",
+    "sections": [
+      {
+        "heading": "What Happened",
+        "body": "รายงานล่าสุดระบุว่า Apple ชะลอแผนพัฒนา Vision รุ่นถัดไป เพื่อโฟกัสไปที่แว่นอัจฉริยะโดยเฉพาะ รุ่นแรกอาจไม่มีจอ AR บนเลนส์ แต่จะมีกล้อง ลำโพง และทำงานผ่าน Siri รุ่นใหม่ แว่นจะต้องเชื่อมต่อกับ iPhone และอาจเปิดตัวช่วงปลายปี 2026 หรือ 2027 ราคาเบื้องต้นคาดว่าอยู่ราว 400–600 ดอลลาร์",
+        "sortOrder": 1
+      },
+      {
+        "heading": "Why It Matters",
+        "body": "ถ้าคุณรอ AR แบบเห็นภาพซ้อนบนโลกจริง รุ่นแรกอาจยังไม่ถึงจุดนั้น แต่ถ้าคุณสนใจผู้ช่วย AI แบบสวมใส่ได้ตลอดวัน นี่อาจเป็นก้าวแรกของ Apple ในตลาดนี้ และถ้าคุณเพิ่งลงทุนกับอุปกรณ์ AR อื่น คำถามคือคุณอยากรอเวอร์ชันที่สมบูรณ์กว่านี้หรือไม่",
+        "sortOrder": 2
+      },
+      {
+        "heading": "Should You Care",
+        "body": "- ถ้าคุณรอ AR เต็มรูปแบบ คุณพร้อมรอถึงรุ่นที่สองหรือยัง\n- ถ้าใช้ iPhone และ AirPods ทุกวัน แว่นที่ผสาน AI จะเปลี่ยนวิธีใช้งานไหม\n- ถ้าคุณเพิ่งซื้อ Vision Pro รู้สึกว่าทิศทางกำลังเปลี่ยนหรือเปล่า",
+        "sortOrder": 3
+      }
+    ],
+    "tags": [
+      { "value": "Apple" },
+      { "value": "Apple Glasses" },
+      { "value": "AR" },
+      { "value": "Wearable" },
+      { "value": "Rumor" }
+    ]
+  }
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

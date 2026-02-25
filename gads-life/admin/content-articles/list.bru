@@ -1,0 +1,28 @@
+meta {
+  name: list
+  type: http
+  seq: 3
+}
+
+get {
+  url: {{local}}/admin/content-articles
+  body: none
+  auth: inherit
+}
+
+headers {
+  X-ADMIN-KEY: {{api-key}}
+}
+
+query {
+  page: 1
+  limit: 20
+  ~type: NEWS
+  ~status: PUBLISHED
+  ~isFeatured: 1
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}
