@@ -1,14 +1,16 @@
 import {
   Entity,
-  PrimaryGeneratedColumn,
   Column,
   Index,
   OneToMany,
   CreateDateColumn,
   UpdateDateColumn,
+  PrimaryColumn,
+  BeforeInsert,
 } from 'typeorm';
 import { ContentSection } from './content-section.entity';
 import { ContentTag } from './content-tag.entity';
+import { nanoid10 } from '../../../utils/nanoid';
 
 export enum ContentType {
   NEWS = 'NEWS',
@@ -27,8 +29,13 @@ export enum ContentStatus {
 @Index(['slug'], { unique: true })
 @Index(['type', 'status', 'publishedAt'])
 export class ContentArticle {
-  @PrimaryGeneratedColumn()
-  id: number;
+  @PrimaryColumn({ type: 'varchar', length: 10 })
+  id: string;
+
+  @BeforeInsert()
+  generateId() {
+    this.id = nanoid10();
+  }
 
   @Column({ type: 'varchar', length: 180 })
   slug: string;

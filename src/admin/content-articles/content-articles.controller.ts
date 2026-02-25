@@ -4,7 +4,6 @@ import {
   Delete,
   Get,
   Param,
-  ParseIntPipe,
   Patch,
   Post,
   Query,
@@ -31,27 +30,27 @@ export class ContentArticlesController {
   }
 
   @Get(':id')
-  findOne(@Param('id', ParseIntPipe) id: number) {
+  findOne(@Param('id') id: string) {
     return this.contentArticlesService.findOne(id);
   }
 
   @Patch(':id')
   update(
-    @Param('id', ParseIntPipe) id: number,
+    @Param('id') id: string,
     @Body() dto: UpdateContentArticleDto,
   ) {
     return this.contentArticlesService.update(id, dto);
   }
 
   @Delete(':id')
-  remove(@Param('id', ParseIntPipe) id: number) {
+  remove(@Param('id') id: string) {
     return this.contentArticlesService.remove(id);
   }
 
   @Delete(':id/tags/:tagId')
   removeTag(
-    @Param('id', ParseIntPipe) id: number,
-    @Param('tagId', ParseIntPipe) tagId: number,
+    @Param('id') id: string,
+    @Param('tagId') tagId: string,
   ) {
     return this.contentArticlesService.removeTag(id, tagId);
   }

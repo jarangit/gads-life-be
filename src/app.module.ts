@@ -29,7 +29,7 @@ import { ContentArticlesModule } from './admin/content-articles/content-articles
         password: configService.get<string>('DB_PASSWORD'),
         database: configService.get<string>('DB_NAME'),
         autoLoadEntities: true,
-        synchronize: true,
+        synchronize: false,
       }),
     }),
     CategoryModule,

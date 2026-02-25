@@ -1,4 +1,4 @@
-import { Controller, Get, Param, ParseIntPipe, Query } from '@nestjs/common';
+import { Controller, Get, Param, Query } from '@nestjs/common';
 import { PublicContentArticlesService } from './public-content-articles.service';
 import { FindPublicContentArticlesDto } from './dto/find-public-content-articles.dto';
 
@@ -19,7 +19,7 @@ export class PublicContentArticlesController {
   }
 
   @Get(':id')
-  findOne(@Param('id', ParseIntPipe) id: number) {
+  findOne(@Param('id') id: string) {
     return this.publicContentArticlesService.findOne(id);
   }
 }

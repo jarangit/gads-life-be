@@ -17,7 +17,7 @@ import {
 } from './dto/find-public-content-articles.dto';
 
 export type PublicContentArticleListItem = {
-  id: number;
+  id: string;
   slug: string;
   title: string;
   summary: string | null;
@@ -36,7 +36,7 @@ export type PublicContentArticleDetail = PublicContentArticleListItem & {
   metaTitle: string | null;
   metaDescription: string | null;
   sections: {
-    id: number;
+    id: string;
     heading: string | null;
     body: string;
     sortOrder: number;
@@ -115,7 +115,7 @@ export class PublicContentArticlesService {
     });
   }
 
-  async findOne(id: number): Promise<PublicContentArticleDetail> {
+  async findOne(id: string): Promise<PublicContentArticleDetail> {
     const article = await this.articleRepository.findOne({
       where: { id, status: ContentStatus.PUBLISHED },
       relations: ['sections', 'tags'],
@@ -206,8 +206,8 @@ export class PublicContentArticlesService {
   }
 
   private async loadTags(
-    articleIds: number[],
-  ): Promise<Record<number, string[]>> {
+    articleIds: string[],
+  ): Promise<Record<string, string[]>> {
     if (!articleIds.length) {
       return {};
     }
@@ -216,7 +216,7 @@ export class PublicContentArticlesService {
       where: { articleId: In(articleIds) },
     });
 
-    return tags.reduce<Record<number, string[]>>((acc, tag) => {
+    return tags.reduce<Record<string, string[]>>((acc, tag) => {
       const normalizedValue = tag.value.trim();
       if (!normalizedValue) {
         return acc;

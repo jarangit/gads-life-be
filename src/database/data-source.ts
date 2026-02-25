@@ -1,5 +1,19 @@
-import 'dotenv/config';
+import * as dotenv from 'dotenv';
+import { existsSync } from 'fs';
 import { DataSource } from 'typeorm';
+
+const nodeEnv = process.env.NODE_ENV;
+const envFiles = [
+  nodeEnv ? `.env.${nodeEnv}` : '',
+  '.env.local',
+  '.env',
+].filter(Boolean);
+
+for (const envFile of envFiles) {
+  if (existsSync(envFile)) {
+    dotenv.config({ path: envFile, override: true });
+  }
+}
 
 /**
  * Standalone DataSource for CLI scripts (seed, migration, etc.)
@@ -13,5 +27,6 @@ export const AppDataSource = new DataSource({
   password: process.env.DB_PASSWORD || '',
   database: process.env.DB_NAME || 'gadslife_db',
   entities: ['src/**/*.entity.ts'],
+  migrations: ['src/migrations/*.ts'],
   synchronize: false,
 });

@@ -112,7 +112,7 @@ export class ContentArticlesService {
     });
   }
 
-  async findOne(id: number) {
+  async findOne(id: string) {
     const article = await this.articleRepository.findOne({
       where: { id },
       relations: ['sections', 'tags'],
@@ -126,7 +126,7 @@ export class ContentArticlesService {
     return this.withUniqueTags(article);
   }
 
-  async update(id: number, dto: UpdateContentArticleDto) {
+  async update(id: string, dto: UpdateContentArticleDto) {
     const existing = await this.articleRepository.findOne({
       where: { id },
     });
@@ -190,7 +190,7 @@ export class ContentArticlesService {
     });
   }
 
-  async remove(id: number) {
+  async remove(id: string) {
     const existing = await this.articleRepository.findOne({
       where: { id },
     });
@@ -202,7 +202,7 @@ export class ContentArticlesService {
     return { success: true };
   }
 
-  async removeTag(articleId: number, tagId: number) {
+  async removeTag(articleId: string, tagId: string) {
     const article = await this.articleRepository.findOne({
       where: { id: articleId },
     });
@@ -250,7 +250,7 @@ export class ContentArticlesService {
 
   private async syncArticleTags(
     tagRepo: Repository<ContentTag>,
-    articleId: number,
+    articleId: string,
     requestedValues: string[],
   ): Promise<void> {
     const existingTags = await tagRepo.find({
@@ -258,7 +258,7 @@ export class ContentArticlesService {
     });
 
     const existingByKey = new Map<string, ContentTag>();
-    const duplicateExistingIds: number[] = [];
+    const duplicateExistingIds: string[] = [];
     const toNormalizeUpdate: ContentTag[] = [];
 
     for (const tag of existingTags) {
@@ -296,7 +296,7 @@ export class ContentArticlesService {
       .filter((tag) => !requestedKeys.has(this.normalizeTagValue(tag.value)))
       .map((tag) => tag.id);
 
-    const allDeleteIds = Array.from(
+    const allDeleteIds: string[] = Array.from(
       new Set([...toDeleteIds, ...duplicateExistingIds]),
     );
 

@@ -1,21 +1,28 @@
 import {
+  BeforeInsert,
   Column,
   CreateDateColumn,
   Entity,
   JoinColumn,
   ManyToOne,
-  PrimaryGeneratedColumn,
+  PrimaryColumn,
   UpdateDateColumn,
 } from 'typeorm';
 import { ContentArticle } from './content-article.entity';
+import { nanoid10 } from '../../../utils/nanoid';
 
 @Entity('content_sections')
 export class ContentSection {
-  @PrimaryGeneratedColumn()
-  id: number;
+  @PrimaryColumn({ type: 'varchar', length: 10 })
+  id: string;
 
-  @Column({ name: 'article_id' })
-  articleId: number;
+  @BeforeInsert()
+  generateId() {
+    this.id = nanoid10();
+  }
+
+  @Column({ name: 'article_id', type: 'varchar', length: 10 })
+  articleId: string;
 
   @ManyToOne(() => ContentArticle, (article) => article.sections, {
     onDelete: 'CASCADE',

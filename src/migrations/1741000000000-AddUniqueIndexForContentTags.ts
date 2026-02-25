@@ -19,16 +19,38 @@ export class AddUniqueIndexForContentTags1741000000000
         AND ct1.\`id\` > ct2.\`id\`
     `);
 
-    await queryRunner.query(`
-      ALTER TABLE \`content_tags\`
-      ADD UNIQUE INDEX \`ux_content_tags_article_value\` (\`article_id\`, \`value\`)
+    const hasUniqueIndex = await queryRunner.query(`
+      SELECT 1
+      FROM information_schema.STATISTICS
+      WHERE TABLE_SCHEMA = DATABASE()
+        AND TABLE_NAME = 'content_tags'
+        AND INDEX_NAME = 'ux_content_tags_article_value'
+      LIMIT 1
     `);
+
+    if (!hasUniqueIndex.length) {
+      await queryRunner.query(`
+        ALTER TABLE \`content_tags\`
+        ADD UNIQUE INDEX \`ux_content_tags_article_value\` (\`article_id\`, \`value\`)
+      `);
+    }
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {
-    await queryRunner.query(`
-      ALTER TABLE \`content_tags\`
-      DROP INDEX \`ux_content_tags_article_value\`
+    const hasUniqueIndex = await queryRunner.query(`
+      SELECT 1
+      FROM information_schema.STATISTICS
+      WHERE TABLE_SCHEMA = DATABASE()
+        AND TABLE_NAME = 'content_tags'
+        AND INDEX_NAME = 'ux_content_tags_article_value'
+      LIMIT 1
     `);
+
+    if (hasUniqueIndex.length) {
+      await queryRunner.query(`
+        ALTER TABLE \`content_tags\`
+        DROP INDEX \`ux_content_tags_article_value\`
+      `);
+    }
   }
 }

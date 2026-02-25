@@ -12,7 +12,7 @@ export class AddProductDetailTables1739750400000
   public async up(queryRunner: QueryRunner): Promise<void> {
     // ── product_key_highlights ──
     await queryRunner.query(`
-      CREATE TABLE \`product_key_highlights\` (
+      CREATE TABLE IF NOT EXISTS \`product_key_highlights\` (
         \`id\`         INT          NOT NULL AUTO_INCREMENT,
         \`product_id\` VARCHAR(10)  NOT NULL,
         \`content\`    TEXT         NOT NULL,
@@ -28,7 +28,7 @@ export class AddProductDetailTables1739750400000
 
     // ── product_weaknesses ──
     await queryRunner.query(`
-      CREATE TABLE \`product_weaknesses\` (
+      CREATE TABLE IF NOT EXISTS \`product_weaknesses\` (
         \`id\`         INT          NOT NULL AUTO_INCREMENT,
         \`product_id\` VARCHAR(10)  NOT NULL,
         \`content\`    TEXT         NOT NULL,
@@ -44,7 +44,7 @@ export class AddProductDetailTables1739750400000
 
     // ── product_before_purchase_points ──
     await queryRunner.query(`
-      CREATE TABLE \`product_before_purchase_points\` (
+      CREATE TABLE IF NOT EXISTS \`product_before_purchase_points\` (
         \`id\`         INT          NOT NULL AUTO_INCREMENT,
         \`product_id\` VARCHAR(10)  NOT NULL,
         \`content\`    TEXT         NOT NULL,
@@ -60,7 +60,7 @@ export class AddProductDetailTables1739750400000
 
     // ── product_after_usage_points ──
     await queryRunner.query(`
-      CREATE TABLE \`product_after_usage_points\` (
+      CREATE TABLE IF NOT EXISTS \`product_after_usage_points\` (
         \`id\`         INT          NOT NULL AUTO_INCREMENT,
         \`product_id\` VARCHAR(10)  NOT NULL,
         \`content\`    TEXT         NOT NULL,
@@ -76,7 +76,7 @@ export class AddProductDetailTables1739750400000
 
     // ── product_pros ──
     await queryRunner.query(`
-      CREATE TABLE \`product_pros\` (
+      CREATE TABLE IF NOT EXISTS \`product_pros\` (
         \`id\`         INT          NOT NULL AUTO_INCREMENT,
         \`product_id\` VARCHAR(10)  NOT NULL,
         \`content\`    TEXT         NOT NULL,
@@ -92,7 +92,7 @@ export class AddProductDetailTables1739750400000
 
     // ── product_cons ──
     await queryRunner.query(`
-      CREATE TABLE \`product_cons\` (
+      CREATE TABLE IF NOT EXISTS \`product_cons\` (
         \`id\`         INT          NOT NULL AUTO_INCREMENT,
         \`product_id\` VARCHAR(10)  NOT NULL,
         \`content\`    TEXT         NOT NULL,
@@ -108,7 +108,7 @@ export class AddProductDetailTables1739750400000
 
     // ── product_quick_verdicts (1:1) ──
     await queryRunner.query(`
-      CREATE TABLE \`product_quick_verdicts\` (
+      CREATE TABLE IF NOT EXISTS \`product_quick_verdicts\` (
         \`id\`          INT           NOT NULL AUTO_INCREMENT,
         \`product_id\`  VARCHAR(10)   NOT NULL,
         \`quote\`       VARCHAR(255)  NOT NULL,
@@ -124,7 +124,7 @@ export class AddProductDetailTables1739750400000
 
     // ── product_quick_verdict_tags ──
     await queryRunner.query(`
-      CREATE TABLE \`product_quick_verdict_tags\` (
+      CREATE TABLE IF NOT EXISTS \`product_quick_verdict_tags\` (
         \`id\`         INT           NOT NULL AUTO_INCREMENT,
         \`product_id\` VARCHAR(10)   NOT NULL,
         \`tag\`        VARCHAR(120)  NOT NULL,
@@ -141,7 +141,7 @@ export class AddProductDetailTables1739750400000
 
     // ── product_pricing (1:1) ──
     await queryRunner.query(`
-      CREATE TABLE \`product_pricing\` (
+      CREATE TABLE IF NOT EXISTS \`product_pricing\` (
         \`id\`          INT           NOT NULL AUTO_INCREMENT,
         \`product_id\`  VARCHAR(10)   NOT NULL,
         \`price\`       INT           NOT NULL,
