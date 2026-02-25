@@ -26,7 +26,7 @@ export const AppDataSource = new DataSource({
   username: process.env.DB_USERNAME || 'root',
   password: process.env.DB_PASSWORD || '',
   database: process.env.DB_NAME || 'gadslife_db',
-  entities: ['src/**/*.entity.ts'],
-  migrations: [__dirname + '/migrations/*{.js}'],
+  entities: [__dirname + '/../**/*.entity.{ts,js}'],
+  migrations: [__dirname + '/../migrations/*.{ts,js}'],
   synchronize: false,
 });
