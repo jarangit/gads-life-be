@@ -32,5 +32,5 @@ COPY --from=builder /app/dist ./dist
 # Expose the port
 EXPOSE 3001
 
-# Start the application
-CMD ["node", "dist/main"]
+# Run migrations then start the app
+CMD ["sh", "-c", "npm run migration:run && node dist/main"]
