@@ -5,6 +5,7 @@ import { PublicBrandsModule } from './public-brands/public-brands.module';
 import { PublicCollectionsModule } from './public-collections/public-collections.module';
 import { HomeModule } from './home/home.module';
 import { AnalyticsModule } from './analytics/analytics.module';
+import { PublicContentArticlesModule } from './public-content-articles/public-content-articles.module';
 
 @Module({
   imports: [
@@ -14,6 +15,7 @@ import { AnalyticsModule } from './analytics/analytics.module';
     PublicCollectionsModule,
     HomeModule,
     AnalyticsModule,
+    PublicContentArticlesModule,
   ],
 })
 export class PublicModule {}

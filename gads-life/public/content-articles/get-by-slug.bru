@@ -1,0 +1,16 @@
+meta {
+  name: get-by-slug
+  type: http
+  seq: 3
+}
+
+get {
+  url: {{local}}/public/content-articles/slug/{{publicContentArticleSlug}}
+  body: none
+  auth: inherit
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

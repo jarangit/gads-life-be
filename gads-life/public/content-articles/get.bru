@@ -1,0 +1,16 @@
+meta {
+  name: get
+  type: http
+  seq: 2
+}
+
+get {
+  url: {{local}}/public/content-articles/{{publicContentArticleId}}
+  body: none
+  auth: inherit
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

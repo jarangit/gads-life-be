@@ -1,0 +1,26 @@
+meta {
+  name: list
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{local}}/public/content-articles
+  body: none
+  auth: inherit
+}
+
+params:query {
+  page: 1
+  limit: 20
+  ~search: reviews
+  ~type: NEWS
+  ~isFeatured: 1
+  ~tag: iphone
+  ~sort: latest
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}
