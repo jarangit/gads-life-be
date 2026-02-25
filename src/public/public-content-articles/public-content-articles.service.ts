@@ -59,9 +59,7 @@ export class PublicContentArticlesService {
 
     const qb = this.articleRepository
       .createQueryBuilder('article')
-      .leftJoin('article.tags', 'tag')
-      .where('article.status = :status', { status: ContentStatus.PUBLISHED })
-      .distinct(true);
+      .where('article.status = :status', { status: ContentStatus.PUBLISHED });
 
     if (query.search) {
       const term = `%${query.search.trim()}%`;
@@ -82,12 +80,26 @@ export class PublicContentArticlesService {
     }
 
     if (query.tag) {
-      qb.andWhere('tag.value = :tag', { tag: query.tag.trim() });
+      qb.andWhere(
+        (subQb) => {
+          const tagSubQuery = subQb
+            .subQuery()
+            .select('1')
+            .from(ContentTag, 'tag')
+            .where('tag.articleId = article.id')
+            .andWhere('tag.value = :tag')
+            .getQuery();
+
+          return `EXISTS ${tagSubQuery}`;
+        },
+        { tag: query.tag.trim() },
+      );
     }
 
     this.applySort(qb, query.sort);
 
-    const [items, total] = await qb.skip(skip).take(limit).getManyAndCount();
+    const total = await qb.clone().getCount();
+    const items = await qb.skip(skip).take(limit).getMany();
 
     const tagsByArticle = await this.loadTags(
       items.map((article) => article.id),
