@@ -12,6 +12,7 @@ import { ProductDetailsModule } from './admin/products/product-details.module';
 import { CollectionItemModule } from './admin/collection-item/collection-item.module';
 import { ReportsModule } from './admin/reports/reports.module';
 import { ContentArticlesModule } from './admin/content-articles/content-articles.module';
+import { FeedbackRequestsModule } from './admin/feedback-requests/feedback-requests.module';
 
 @Module({
   imports: [
@@ -41,6 +42,7 @@ import { ContentArticlesModule } from './admin/content-articles/content-articles
     CollectionItemModule,
     ReportsModule,
     ContentArticlesModule,
+    FeedbackRequestsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

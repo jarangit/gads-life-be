@@ -1,0 +1,20 @@
+meta {
+  name: delete
+  type: http
+  seq: 4
+}
+
+delete {
+  url: {{local}}/admin/feedback-requests/{{feedbackRequestId}}
+  body: none
+  auth: inherit
+}
+
+headers {
+  X-ADMIN-KEY: {{api-key}}
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}
