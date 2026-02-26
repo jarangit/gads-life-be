@@ -1,0 +1,27 @@
+meta {
+  name: create
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{local}}/public/feedback-requests
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "type": "WRONG_INFORMATION",
+    "name": "John Doe",
+    "email": "john@example.com",
+    "subject": "สเปกสินค้าไม่ตรงหน้าเว็บ",
+    "message": "ข้อมูล RAM ในหน้าสินค้าไม่ตรงกับสเปกจากผู้ผลิต รบกวนตรวจสอบครับ",
+    "pageUrl": "https://gads.life/products/sample-product"
+  }
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}
