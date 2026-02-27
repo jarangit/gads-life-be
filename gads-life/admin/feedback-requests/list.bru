@@ -1,0 +1,28 @@
+meta {
+  name: list
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{local}}/admin/feedback-requests
+  body: none
+  auth: inherit
+}
+
+headers {
+  X-ADMIN-KEY: {{api-key}}
+}
+
+params:query {
+  page: 1
+  limit: 20
+  ~status: NEW
+  ~type: ISSUE
+  ~search: bug
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

@@ -6,6 +6,7 @@ import { PublicCollectionsModule } from './public-collections/public-collections
 import { HomeModule } from './home/home.module';
 import { AnalyticsModule } from './analytics/analytics.module';
 import { PublicContentArticlesModule } from './public-content-articles/public-content-articles.module';
+import { PublicFeedbackRequestsModule } from './public-feedback-requests/public-feedback-requests.module';
 
 @Module({
   imports: [
@@ -16,6 +17,7 @@ import { PublicContentArticlesModule } from './public-content-articles/public-co
     HomeModule,
     AnalyticsModule,
     PublicContentArticlesModule,
+    PublicFeedbackRequestsModule,
   ],
 })
 export class PublicModule {}

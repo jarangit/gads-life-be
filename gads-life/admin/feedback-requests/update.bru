@@ -1,0 +1,27 @@
+meta {
+  name: update
+  type: http
+  seq: 3
+}
+
+patch {
+  url: {{local}}/admin/feedback-requests/{{feedbackRequestId}}
+  body: json
+  auth: inherit
+}
+
+headers {
+  X-ADMIN-KEY: {{api-key}}
+}
+
+body:json {
+  {
+    "status": "IN_PROGRESS",
+    "adminNote": "ทีมกำลังตรวจสอบและจะอัปเดตข้อมูลให้เร็วที่สุด"
+  }
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}
