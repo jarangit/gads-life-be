@@ -41,28 +41,72 @@ export class HomeService {
   }
 
   async findAll(): Promise<IHomeResponse> {
-    const categories = await this.categoryRepository.find();
-    const topPickProduct = await this.productRepository.find({
-      order: { updatedAt: 'DESC' },
-      take: 5,
-    });
-    const lastReviewProduct = await this.productRepository.find({
-      order: { updatedAt: 'DESC' },
-      take: 5,
-    });
-    const topBrands = await this.brandRepository.find({
-      order: { updatedAt: 'DESC' },
-      take: 5,
-    });
+    const [
+      categories,
+      topPicks,
+      lastReview,
+      topBrands,
+      sellProducts,
+      quickVerdictProducts,
+      featuredArticles,
+    ] = await Promise.all([
+      this.getCategories(),
+      this.getTopPickProducts(),
+      this.getLastReviewProducts(),
+      this.getTopBrands(),
+      this.getSellProducts(),
+      this.getQuickVerdictProducts(),
+      this.getFeaturedArticles(),
+    ]);
 
-    // i want to find sell product by collection slug = 'sell-product'
-    const sellProducts = await this.collectionRepository.findOne({
+    return {
+      categories,
+      topPicks,
+      lastReview,
+      topBrands,
+      sellProducts,
+      quickVerdictProducts,
+      featuredArticles,
+    };
+  }
+
+  private async getCategories() {
+    return this.categoryRepository.find();
+  }
+
+  private async getTopPickProducts() {
+    return this.productRepository.find({
+      order: { updatedAt: 'DESC' },
+      take: 5,
+    });
+  }
+
+  private async getLastReviewProducts() {
+    return this.productRepository.find({
+      order: { updatedAt: 'DESC' },
+      take: 5,
+    });
+  }
+
+  private async getTopBrands() {
+    return this.brandRepository.find({
+      order: { updatedAt: 'DESC' },
+      take: 5,
+    });
+  }
+
+  private async getSellProducts(): Promise<Product[]> {
+    const collections = await this.collectionRepository.find({
       where: { slug: 'shop-special-price' },
       relations: ['items', 'items.product'],
     });
+    return collections.length > 0
+      ? collections[0].items.slice(0, 5).map((item) => item.product)
+      : [];
+  }
 
-    // fetch random products that have quickVerdict (for "what is this product" section)
-    const quickVerdictProducts = await this.productRepository
+  private async getQuickVerdictProducts(): Promise<IQuickVerdictProductItem[]> {
+    const products = await this.productRepository
       .createQueryBuilder('product')
       .innerJoinAndSelect('product.quickVerdict', 'quickVerdict')
       .leftJoinAndSelect('product.category', 'category')
@@ -71,45 +115,42 @@ export class HomeService {
       .take(5)
       .getMany();
 
-    const featuredArticles = await this.contentArticleRepository.find({
+    return products.map((p) => ({
+      id: p.id,
+      slug: p.slug ?? null,
+      name: p.name,
+      quickVerdict: p.quickVerdict.quote,
+      categoryName: p.category ? p.category.nameTh : null,
+    }));
+  }
+
+  private async getFeaturedArticles(): Promise<IFeaturedArticleItem[]> {
+    const articles = await this.contentArticleRepository.find({
       where: { isFeatured: 1, status: ContentStatus.PUBLISHED },
       order: { publishedAt: 'DESC' },
       take: 5,
-      select: ['id', 'slug', 'title', 'excerpt', 'heroImage', 'heroImageAlt', 'type', 'publishedAt'],
+      select: [
+        'id',
+        'slug',
+        'title',
+        'excerpt',
+        'heroImage',
+        'heroImageAlt',
+        'type',
+        'publishedAt',
+      ],
     });
 
-    return {
-      categories,
-      topPicks: topPickProduct,
-      lastReview: lastReviewProduct,
-      topBrands,
-      sellProducts:
-        sellProducts?.items.map((item) => ({
-          ...item.product,
-          sellPrice: item.dealPrice,
-        })) || [],
-      quickVerdictProducts: quickVerdictProducts.map(
-        (p): IQuickVerdictProductItem => ({
-          id: p.id,
-          slug: p.slug ?? null,
-          name: p.name,
-          quickVerdict: p.quickVerdict.quote,
-          categoryName: p.category ? p.category.nameTh : null,
-        }),
-      ),
-      featuredArticles: featuredArticles.map(
-        (a): IFeaturedArticleItem => ({
-          id: a.id,
-          slug: a.slug,
-          title: a.title,
-          excerpt: a.excerpt ?? null,
-          heroImage: a.heroImage ?? null,
-          heroImageAlt: a.heroImageAlt ?? null,
-          type: a.type,
-          publishedAt: a.publishedAt ?? null,
-        }),
-      ),
-    };
+    return articles.map((a) => ({
+      id: a.id,
+      slug: a.slug,
+      title: a.title,
+      excerpt: a.excerpt ?? null,
+      heroImage: a.heroImage ?? null,
+      heroImageAlt: a.heroImageAlt ?? null,
+      type: a.type,
+      publishedAt: a.publishedAt ?? null,
+    }));
   }
 
   findOne(id: number) {
